@@ -19,12 +19,8 @@ head = 0
 
 hRange = range(0,56)
 for cdoc in reader:
-	#print (cdoc)
-	#print(type(cdoc))
 	if head in hRange:
 		if head == 4:
-			#search_term = cdoc[1]
-			#print (search_term)
 			ndoc[0] = 'Week'
 			ndoc[1] = 'Start'
 			ndoc[2] = 'End'
@@ -33,7 +29,6 @@ for cdoc in reader:
 
 			output = ','.join(ndoc) + '\n'
 			exportFile.write(output)
-
 
 		elif head > 4:
 			days = cdoc[0].split(" - ")
@@ -45,15 +40,10 @@ for cdoc in reader:
 			output = ','.join(ndoc) + '\n'
 			exportFile.write(output)
 
-			# for i in ndoc:
-			# 	print i
-
 		head += 1
 	else:
 		head += 1
 		continue
-	#print (head)
-
 
 fileDir.close()
 exportFile.close()

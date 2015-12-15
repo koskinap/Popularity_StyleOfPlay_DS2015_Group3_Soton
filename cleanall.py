@@ -1,31 +1,14 @@
-#Google Trends Data Cleaning
+#Google Trends all files Data Cleaning
 import os.path
 import csv
 import re
 import sys
 import glob
-#import pandas as pd
 
-#fileDir = open('../Premier_Data/arsenalfc.csv','rU')
 fileDir = ''
 exportFile = open('../cleaned_premier_data/all_cleaned.csv', 'w+')
-#exportFile = ''
-####################################################
-
-path =r'../Premier_Data' # use your path
+path =r'../Premier_Data' 
 allFiles = glob.glob(path + "/*.csv")
-#print (allFiles)
-#frame = pd.DataFrame()
-#list_ = []
-#for file_ in allFiles:
-#    df = pd.read_csv(file_,index_col=None, header=0)
-#    list_.append(df)
-#frame = pd.concat(list_)
-
-
-######################################################
-
-#reader = csv.reader(fileDir)
 
 teamNo = 0
 hRange = range(0,56)
@@ -33,13 +16,12 @@ hRange = range(0,56)
 for currFile in allFiles:
 	print(currFile)
 	fileDir = open(currFile,'rU')
-	reader = csv.reader(fileDir)#,index_col=None)#, header=0)
+	reader = csv.reader(fileDir)
 	print(reader)
 	teamNo += 1
 	search_term = ''
 	ndoc = [None] * 6
 	head = 0
-
 
 	for cdoc in reader:
 		print(cdoc)
@@ -56,9 +38,7 @@ for currFile in allFiles:
 				exportFile.write(output)
 
 			if head == 4:
-				print (cdoc)
 				search_term = cdoc[1]
-				#print (search_term)
 			elif head > 4:
 				days = cdoc[0].split(" - ")
 				ndoc[0] = str(head - 4)
@@ -75,5 +55,4 @@ for currFile in allFiles:
 		
 		head += 1
 
-#fileDir.close()
 exportFile.close()
