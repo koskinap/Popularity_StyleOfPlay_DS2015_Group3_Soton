@@ -5,24 +5,63 @@ import tweepy
 import nltk
 import re
 import random
+import os
+
 from nltk.corpus import movie_reviews
+from datetime import datetime
+
+global today
+today = None
 
 word_features = {}
 word_featuresSent = []
 
 def getClassifier(team):
-	if team == 'Man United':
+	if team == 'ARSENAL':
+		return arsenalClassifier
+	if team == 'LEICESTER':
+		return leicesterClassifier
+	if team == 'MANCITY':
+		return manCityClassifier
+	if team == 'MANUNITED':
 		return manUnitedClassifier
-	if team == 'Norwich City':
+	if team == 'TOTENHAM':
+		return totenhamClassifier
+	if team == 'CRYSTALPALACE':
+		return crystalPalaceClassifier
+	if team == 'WATFORD':
+		return watfordClassifier
+	if team == 'WESTHAM':
+		return westHamClassifier
+	if team == 'LIVERPOOL':
+		return liverpoolClassifier
+	if team == 'EVERTON':
+		return evertonClassifier
+	if team == 'STOKE':
+		return stokeClassifier
+	if team == 'SOUTHAMPTON':
+		return southamptonClassifier
+	if team == 'WESTBROM':
+		return westBromClassifier
+	if team == 'BOURNEMOUTH':
+		return bournemouthClassifier
+	if team == 'CHELSEA':
+		return chelseaClassifier
+	if team == 'NEWCASTLE':
+		return newCastleClassifier
+	if team == 'NORWICH':
 		return norwichClassifier
-	return arsenalClassifier
+	if team == 'SWANSEA':
+		return swanseaClassifier
+	if team == 'SUNDERLAND':
+		return sunderlandClassifier
+	if team == 'ASTONVILLA':
+		return astonVillaClassifier
+
 
 
 def getClassifierKey(team):
-	if team == 'Man United':
-		return "MANUNITED"
-	if team == 'Norwich City':
-		return "NORWICH"
+	return team
 
 
 class Listener1(tweepy.StreamListener):
@@ -41,7 +80,7 @@ class Listener1(tweepy.StreamListener):
 		
 		tweetToAnalyze = status.text
 		#print(tweetToAnalyze)
-		print("New Tweet")
+		print(" **** New Tweet : "+self.team1+" - "+self.team2)
 		#print(self.endTime)
 		#print(self.team1)
 		#print(self.team2)
@@ -59,7 +98,10 @@ class Listener1(tweepy.StreamListener):
 		isTeam1 = ( classifier1.classify(findFeatures(lowerTweetWords,getClassifierKey(self.team1))) != 'no')
 		isTeam2 = ( classifier2.classify(findFeatures(lowerTweetWords,getClassifierKey(self.team2))) != 'no')
 		
-		with open('sentiment', 'a') as f:
+		global today
+		fileName = today+"_"+self.team1+"_"+self.team2
+
+		with open(fileName, 'a') as f:
 
 			if isTeam1 or isTeam2:
 				# sentimentAnalysis
@@ -126,8 +168,7 @@ def listenToStream(match):
 
 	streaming1 = tweepy.streaming.Stream(auth, listener1, timeout=60)
 	streaming1.filter(async=True, track=[hashtag1,hashtag2])
-	# print(match)
-
+	print(" [INFO] Stream for : "+hashtag1+" and "+hashtag2+" is set.")
 
 
 def findFeatures(tweet,classifierKey):
@@ -153,7 +194,8 @@ def findFeaturesSentiment(tweet):
 def prepareClassifier(trainingFile,classifierKey):
 	
 	tweets = []
-	
+	#trainingSetsFolder = "trainingSets/"
+	#os.path.join(trainingSetsFolder, trainingFile)
 	with open(trainingFile) as training:
 		tweetsFile = json.load(training)
 		for tweet in tweetsFile["tweets"]:
@@ -224,61 +266,47 @@ def prepareSentimentClassifier():
 
 try:
 
-############################## Prepare Classifiers
+	global today
+	today = datetime.now().strftime("%Y-%m-%d")
 
-	# Train the classifiers
-	
-	# for a classifier
-	# get training set
+############################## Prepare Classifiers ##############################
 
-
-#	arsenalClassifier = prepareClassifier('trainingSetArsenal.json',"ARSENAL")
-#	leicesterClassifier = prepareClassifier('trainingSetLeicester.json')
-#	manCityClassifier = prepareClassifier('trainingSetManCity.json')
+	arsenalClassifier = prepareClassifier('trainingSetArsenal.json',"ARSENAL")
+	leicesterClassifier = prepareClassifier('trainingSetLeicester.json',"LEICESTER")
+	manCityClassifier = prepareClassifier('trainingSetManCity.json',"MANCITY")
 	manUnitedClassifier = prepareClassifier('trainingSetManUnited.json',"MANUNITED")
-#	totenhamClassifier = prepareClassifier('trainingSetTotenham.json')
-#	crystalPalaceClassifier = prepareClassifier('trainingSetCrystalPalace.json')
-#	watfordClassifier = prepareClassifier('trainingSetWatford.json')
-#	westHamClassifier = prepareClassifier('trainingSetWestHam.json')
-#	liverpoolClassifier = prepareClassifier('trainingSetLiverpool.json')
-#	evertonClassifier = prepareClassifier('trainingSetEverton.json')
-#	arsenalClassifier = prepareClassifier('trainingSetArsenal.json')
-#	arsenalClassifier = prepareClassifier('trainingSetArsenal.json')
-#	arsenalClassifier = prepareClassifier('trainingSetArsenal.json')
-#	arsenalClassifier = prepareClassifier('trainingSetArsenal.json')
-#	arsenalClassifier = prepareClassifier('trainingSetArsenal.json')
-#	arsenalClassifier = prepareClassifier('trainingSetArsenal.json')
+	totenhamClassifier = prepareClassifier('trainingSetTotenham.json',"TOTENHAM")
+	crystalPalaceClassifier = prepareClassifier('trainingSetCrystalPalace.json',"CRYSTALPALACE")
+	watfordClassifier = prepareClassifier('trainingSetWatford.json',"WATFORD")
+	westHamClassifier = prepareClassifier('trainingSetWestHam.json',"WESTHAM")
+	liverpoolClassifier = prepareClassifier('trainingSetLiverpool.json',"LIVERPOOL")
+	evertonClassifier = prepareClassifier('trainingSetEverton.json',"EVERTON")
+	stokeClassifier = prepareClassifier('trainingSetStoke.json',"STOKE")
+	southamptonClassifier = prepareClassifier('trainingSetSouthampton.json',"SOUTHAMPTON")
+	westBromClassifier = prepareClassifier('trainingSetWestBrom.json',"WESTBROM")
+	bournemouthClassifier = prepareClassifier('trainingSetBournemouth.json',"BOURNEMOUTH")
+	chelseaClassifier = prepareClassifier('trainingSetChelsea.json',"CHELSEA")
+	newCastleClassifier = prepareClassifier('trainingSetNewCastle.json',"NEWCASTLE")
 	norwichClassifier = prepareClassifier('trainingSetNorwich.json',"NORWICH")
-#	arsenalClassifier = prepareClassifier('trainingSetArsenal.json')
-#	arsenalClassifier = prepareClassifier('trainingSetArsenal.json')
-	
-#	sentimentClassifier = prepareClassifier('trainingSetSentiment.json')
+	swanseaClassifier = prepareClassifier('trainingSetSwansea.json',"SWANSEA")
+	sunderlandClassifier = prepareClassifier('trainingSetSunderland.json',"SUNDERLAND")
+	astonVillaClassifier = prepareClassifier('trainingSetAstonVilla.json',"ASTONVILLA")
+
 	sentimentClassifier = prepareSentimentClassifier()
 
-
-###################################	
+###################################################################################	
 
 	auth = login()
 
 	# get today's file
-	with open('matches.json') as data_file:
-		data = json.load(data_file)
-
-		for match in data["matches"]:
-
-			#t = Thread(target=myfunc, args=(1,))			
-			#t = Thread(target=listenToStream, args=("a",))
-			#t = Thread(target=listenToStream, kwargs={'match': match})
-			#t.start()
-			#print(json.dumps(match))
-			_thread.start_new_thread( listenToStream, (match, ) )
-
-		#_thread.start_new_thread( print_time, ("Thread-2", 4, ) )
+	with open('realTimeMatch.json') as data_file:
+		match = json.load(data_file)
+		analyzeTweets(match)
 
 
 except Exception as e:
-	print(type(e))    # the exception instance
-	print(e.args)     # arguments stored in .args
+	print(type(e))
+	print(e.args)
 	print(e)
 
 while 1:

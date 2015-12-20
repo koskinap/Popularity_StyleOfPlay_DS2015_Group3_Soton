@@ -1,5 +1,5 @@
 {"matches":[
-	{"startTime":"15:00", "teams": [{"team":"Norwich City"},{"team":"Man United"}] ,"hashtags":[{"hashtag":"#MUNNOR"},{"hashtag":"#NORMUN"}]}
+	{"startDate":"2015-12-19","startTime":"15:00", "endCollectTime":"2015-12-19 23:00", "teams": [{"team":"NORWICH"},{"team":"MANUNITED"}] ,"hashtags":[{"hashtag":"#MUNNOR"},{"hashtag":"#NORMUN"}]}
 	]
 }
 
