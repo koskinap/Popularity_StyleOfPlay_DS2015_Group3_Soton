@@ -11,7 +11,7 @@ reader = csv.reader(fileDir)
 search_term = ''
 ndoc = [None] * 5
 
-print(type(reader))
+#print(type(reader))
 
 teamNo = 1
 head = 0

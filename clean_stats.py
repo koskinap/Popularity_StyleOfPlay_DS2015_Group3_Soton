@@ -16,14 +16,12 @@ keys = [ "matchDate", "matchId", "team", "teamNo", "passes", "shotsOnTarget", "s
 
 with statsFile as data_file:
 	data = json.load(data_file)
-	print len(data)
+	#print len(data)
 	for cdoc in data:
 		i = cdoc['team'].strip()
-		#probably some team names do not match exactly the names of th dictionary
-		# if i in teamsDic:
 		cdoc['teamNo'] = teamsDic[i]
 		if len(cdoc) < 15:
-				#badOutput.append(cdoc)
+			badOutput.append(cdoc)
 			for k in keys:
 				cdoc.setdefault(k, "0")
 		output.append(cdoc)
@@ -31,6 +29,6 @@ with statsFile as data_file:
 with open('../cleaned_premier_data/cleaned_stats.json', mode = 'w') as f:
  	json.dump(output, f, indent = 2)
 
-# with open('../cleaned_premier_data/badformat_stats.json', mode = 'w') as g:
-# 	json.dump(badOutput, g, indent = 2)
+with open('../cleaned_premier_data/badformat_stats.json', mode = 'w') as g:
+	json.dump(badOutput, g, indent = 2)
 
