@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+	<title>Popularity</title>
+
+	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="{{ url_for('static', filename='myScript.js') }}"></script>	
+
+	<style>
+
+	</style>
+
+</head>
+<body>
+
+
+	<form action="">
+		Choose a Team : <input type="text" name="team">
+		<input type="submit" value="Submit">
+	</form>
+	<br/>
+	<input style="background:#FF7777;" readonly="readonly" type="text" value=" No Team" id="choosenTeam" />
+	
+	<script>
+		document.getElementById('choosenTeam').value = team;
+	</script>
+
+	<div id="results">
+	</div>
+
+
+	<script>
+
+		var svg = d3.select("#results").append("svg").attr("width",750).attr("height",330);
+
+		d3.json("http://localhost:5000/popularity/"+team, function(error, days){
+			days.forEach(function(day){
+				d3.select("body").append("text").text( " Date = "+day.date+" Pos = "+day.pos_count+" Neg = "+day.neg_count);
+				d3.select("body").append("br");
+			});
+
+			var barsPos = svg.selectAll("rect.barPos").data(days);
+			
+			barsPos.enter().append("rect").classed("barPos", true);
+
+			barsPos
+			.attr("x", function (d,i) { return i * 80;})
+			.attr("width",30)
+			.attr("y", function(d) {
+				return 300 - (d.pos_count);
+			})
+			.attr("height", function (d) { return d.pos_count;})
+			.attr("fill", "teal");
+
+
+			var barsNeg = svg.selectAll("rect.barNeg").data(days);
+			
+			barsNeg.enter().append("rect").classed("barNeg", true);
+
+			barsNeg
+			.attr("x", function (d,i) { return i * 80 + 30;})
+			.attr("width",30)
+			.attr("y", function(d) {
+				return 300 - (d.neg_count);
+			})
+			.attr("height", function (d) { return d.neg_count;})
+			.attr("fill", "red");
+
+
+			svg.selectAll("text.pos_count")
+			.data(days)
+			.enter()
+			.append("text")
+			.classed("pos_count", true)
+			.text(function(d) {
+				return d.pos_count;
+			})
+			.attr("x", function (d,i) { return i * 80 + 10;})
+			.attr("y", function(d) {
+				return 300 - (d.pos_count) + 15;
+			})
+
+
+			svg.selectAll("text.neg_count")
+			.data(days)
+			.enter()
+			.append("text")
+			.classed("neg_count", true)
+			.text(function(d) {
+				return d.neg_count;
+			})
+			.attr("x", function (d,i) { return i * 80 + 40;})
+			.attr("y", function(d) {
+				return 300 - (d.neg_count) + 15;
+			})
+
+
+
+
+			svg.selectAll("text.date")
+			.data(days)
+			.enter()
+			.append("text")
+			.classed("date", true)
+			.text(function(d) {
+				return d.date;
+			})
+			.attr("x", function (d,i) { return i * 80 + 14;})
+			.attr("y", function(d) {
+				return 315;
+			})
+			
+
+		});
+	</script>
+
+
+
+
+
+
+
+</body>
+</html>
