@@ -9,7 +9,16 @@
 	<script src="{{ url_for('static', filename='myScript.js') }}"></script>	
 
 	<style>
+		.axis {
+		  font: 10px sans-serif;
+		}
 
+		.axis path,
+		.axis line {
+		  fill: none;
+		  stroke: #000;
+		  shape-rendering: crispEdges;
+		}
 	</style>
 
 </head>
@@ -30,28 +39,29 @@
 	<div id="results">
 	</div>
 
+	<div id="results2">
+	</div>
+
 
 	<script>
 
-		var svg = d3.select("#results").append("svg").attr("width",750).attr("height",330);
+		var height = 300;
+
+		var svg = d3.select("#results").append("svg").attr("width",750).attr("height",height+30);
 
 		d3.json("http://localhost:5000/popularity/"+team, function(error, days){
-			days.forEach(function(day){
-				d3.select("body").append("text").text( " Date = "+day.date+" Pos = "+day.pos_count+" Neg = "+day.neg_count);
-				d3.select("body").append("br");
-			});
 
 			var barsPos = svg.selectAll("rect.barPos").data(days);
 			
 			barsPos.enter().append("rect").classed("barPos", true);
 
 			barsPos
-			.attr("x", function (d,i) { return i * 80;})
+			.attr("x", function (d,i) { return 60 + 10 + i * 80;})
 			.attr("width",30)
 			.attr("y", function(d) {
-				return 300 - (d.pos_count);
+				return height - (d.pos_count/50).toPrecision(4);
 			})
-			.attr("height", function (d) { return d.pos_count;})
+			.attr("height", function (d) { return (d.pos_count/50).toPrecision(4);})
 			.attr("fill", "teal");
 
 
@@ -60,12 +70,12 @@
 			barsNeg.enter().append("rect").classed("barNeg", true);
 
 			barsNeg
-			.attr("x", function (d,i) { return i * 80 + 30;})
+			.attr("x", function (d,i) { return 60 + 10 + i * 80 + 30;})
 			.attr("width",30)
 			.attr("y", function(d) {
-				return 300 - (d.neg_count);
+				return height - (d.neg_count/50).toPrecision(4);
 			})
-			.attr("height", function (d) { return d.neg_count;})
+			.attr("height", function (d) { return (d.neg_count/50).toPrecision(4);})
 			.attr("fill", "red");
 
 
@@ -77,10 +87,11 @@
 			.text(function(d) {
 				return d.pos_count;
 			})
-			.attr("x", function (d,i) { return i * 80 + 10;})
+			.attr("x", function (d,i) { return 60 + 10 + i * 80 + 15;})
 			.attr("y", function(d) {
-				return 300 - (d.pos_count) + 15;
+				return height - (d.pos_count/50).toPrecision(4) - 1;
 			})
+			.style("text-anchor", "middle")
 
 
 			svg.selectAll("text.neg_count")
@@ -91,10 +102,11 @@
 			.text(function(d) {
 				return d.neg_count;
 			})
-			.attr("x", function (d,i) { return i * 80 + 40;})
+			.attr("x", function (d,i) { return 60 + 10 + i * 80 + 45;})
 			.attr("y", function(d) {
-				return 300 - (d.neg_count) + 15;
+				return height - (d.neg_count/50).toPrecision(4) - 1;
 			})
+			.style("text-anchor", "middle")
 
 
 
@@ -107,13 +119,78 @@
 			.text(function(d) {
 				return d.date;
 			})
-			.attr("x", function (d,i) { return i * 80 + 14;})
+			.attr("x", function (d,i) { return 60 + 10 + i * 80 + 30;})
 			.attr("y", function(d) {
 				return 315;
 			})
-			
+			.style("text-anchor", "middle")
+
 
 		});
+
+			
+		
+			// Vertical Scale
+			var vScale = d3.scale.linear()
+				.domain([0, height*50])
+				.range([height, 0]);
+
+			// V Axis
+			var vAxis = d3.svg.axis()
+				.scale(vScale)
+				.orient('left')
+				.ticks(5);
+
+
+			var vGuide = d3.select('svg').append('g');
+
+			vAxis(vGuide);
+
+			vGuide.attr('transform','translate(60,0)');
+			vGuide.selectAll('path')
+				.style('fill','none')
+				.style('stroke','#000')
+			vGuide.selectAll('line')
+				.style('stroke','#000')
+
+
+			
+/*			svg.append("g")
+				.attr("class", "vScale axis")
+				.call(vAxis);
+*/
+
+
+		var svg2 = d3.select("#results2").append("svg").attr("width",750).attr("height",height+30);			
+		
+/*		var jsonRectangles = [
+			{ "color" : "green" },
+			{ "color" : "purple" }];
+*/
+		var jsonRectangles = [
+			{ "value" : "0" },
+			{ "value" : "1" },
+			{ "value" : "1" },
+			{ "value" : "0" },
+			{ "value" : "1" },
+			{ "value" : "0" }];
+
+		var rectangles = svg2.selectAll("rect")
+				.data(jsonRectangles)
+				.enter()
+				.append("rect");
+
+
+		var ramp = d3.scale.linear().domain([0,1]).range(["red","blue"]);
+
+
+		var rectangleAttributes = rectangles
+				.attr("x", function (d,i) { return 60 + 10 + i * 80; })
+				.attr("y", 25)
+				.attr("height", 20)
+				.attr("width", 60)
+				.style("fill", function(d) { return ramp(d.value); });
+
 	</script>
 
 
