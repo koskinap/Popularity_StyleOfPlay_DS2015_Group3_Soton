@@ -1,7 +1,13 @@
 import json
+import re
 
 from flask import Flask
 from flask import render_template
+
+from os import listdir
+from os.path import isfile
+
+
 
 app = Flask(__name__)
 
@@ -21,33 +27,45 @@ def gdata(team):
 
 	print(" ########################## "+team)
 
-	if team == "MANUNITED" :
+#	if team == "MANUNITED" :
 
-		doc1 = {}
-		doc1["date"] = "12/12"
-		doc1["pos_count"] = 90
-		doc1["neg_count"] = 20	
-		json_docs.append(doc1)
+	teamFiles = [f for f in listdir('.') if (isfile(f) and team in re.split('_', f))]
 
-		doc2 = {}
-		doc2["date"] = "12/19"
-		doc2["pos_count"] = 20
-		doc2["neg_count"] = 70	
-		json_docs.append(doc2)
+	for teamFile in teamFiles :
+			
+		matchDate = re.split('_', teamFile)[0]
+		countPos = 0
+		countNeg = 0
 
-	if team == "NORWICH" :
+		with open(teamFile,'r') as fi:
+			for line in fi:
+				jsonLine = json.loads(line)
+				if jsonLine['team'] == team :
+					if jsonLine['sentiment'] == "pos" :
+						countPos += 1
+					if jsonLine['sentiment'] == "neg" :
+						countNeg += 1
 
-		doc1 = {}
-		doc1["date"] = "12/12"
-		doc1["pos_count"] = 50
-		doc1["neg_count"] = 25	
-		json_docs.append(doc1)
+		entry = {}
+		entry["date"] = matchDate
+		entry["pos_count"] = countPos
+		entry["neg_count"] = countNeg	
+		json_docs.append(entry)
 
-		doc2 = {}
-		doc2["date"] = "12/19"
-		doc2["pos_count"] = 30
-		doc2["neg_count"] = 20	
-		json_docs.append(doc2)
+
+#	if team == "NORWICH" :
+
+#		doc1 = {}
+#		doc1["date"] = "12/12"
+#		doc1["pos_count"] = 50
+#		doc1["neg_count"] = 25	
+#		json_docs.append(doc1)
+
+#		doc2 = {}
+#		doc2["date"] = "12/19"
+#		doc2["pos_count"] = 30
+#		doc2["neg_count"] = 20	
+#		json_docs.append(doc2)
 
 	json_docs = json.dumps(json_docs)
 
