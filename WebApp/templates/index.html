@@ -6,8 +6,9 @@
 	<title>Popularity</title>
 
 	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	<script src="{{ url_for('static', filename='myScript.js') }}"></script>	
-
+	<script src="vars_script.js"></script>
+<!--	<script src="{{ url_for('static', filename='myScript.js') }}"></script> -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<style>
 		.axis {
 		  font: 10px sans-serif;
@@ -19,185 +20,375 @@
 		  stroke: #000;
 		  shape-rendering: crispEdges;
 		}
+
+
+
+		#wrapper {
+			background-color:#eee;
+		}
+			#header {
+				background-color:#ccc;
+				height: 100px;
+			}
+			#teamsMenu {
+				min-height: 400px;
+				width: 200px;
+				float: left;
+				background-color:#ccc;
+			}
+
+				#teams_form ul{
+					padding:0;
+				}
+				#teams_form li{
+					padding:0.15em 0 0.5em 1.5em;
+					margin-bottom:0.2em;
+					text-indent:0.4em;
+					font-weight:bold;
+					list-style:none;
+				}
+
+
+			#mainGraph {
+				text-align:center;
+				min-height: 600px;
+				width: 400px;
+				float: left;
+				background-color:#eee;
+			}
+			#statsWrapper {
+				min-height: 600px;
+				width: 300px;
+				float: right;
+				background-color:#ccc;
+			}
+				#teamLogo {
+					background-color:#eee;
+				}
+				#statsGraph {
+					background-color:#ccc;
+				}
+
+			
+			#footer {
+				background-color:#ccc;
+			}
+
+			.clear{
+				clear: both;			
+			}
+
 	</style>
 
 </head>
 <body>
 
+	<div id="wrapper">
 
-	<form action="">
-		Choose a Team : <input type="text" name="team">
-		<input type="submit" value="Submit">
-	</form>
-	<br/>
-	<input style="background:#FF7777;" readonly="readonly" type="text" value=" No Team" id="choosenTeam" />
-	
-	<script>
-		document.getElementById('choosenTeam').value = team;
-	</script>
+		<div id="header">
 
-	<div id="results">
-	</div>
+		</div> <!-- end header -->
 
-	<div id="results2">
-	</div>
+		<div id="teamsMenu">
+			<form id="teams_form" action="">
+				<input id="choose_team" type="hidden" name="team" value="">
+				<input id="stats_date" type="hidden" name="stats_date" value=""/>
+				<ul>
+					<li id="chelsea">
+						<input type="submit" value="CHELSEA" onclick="return chelsea();" />
+						<script>
+function chelsea() {
+	document.getElementById('choose_team').value = "CHELSEA";
+	return true;
+}
+</script>
+					</li>
+					<li id="manunited">
+						<input type="submit" value="MANUNITED" onclick="return manunited();" />
+						<script>
+
+function manunited() {
+	document.getElementById('choose_team').value = "MANUNITED";
+	return true;
+}
+</script>
+					</li>
+				</ul>
+			</form>
+		</div> <!-- end teamsMenu -->
+
+		<div id="mainGraph">
+			<br/>
+			<div id="results">
+			</div><!-- end results -->
+
+			<div id="results2">
+			</div><!-- end results2 -->
 
 
-	<script>
+			<script>
 
-		var height = 300;
+				var height = 300;
 
-		var svg = d3.select("#results").append("svg").attr("width",750).attr("height",height+30);
+				var svg = d3.select("#results").append("svg").attr("width",750).attr("height",height+30);
 
-		d3.json("http://localhost:5000/popularity/"+team, function(error, days){
+				console.log(" GETTING popularity data for : "+team);
 
-			var barsPos = svg.selectAll("rect.barPos").data(days);
+
+				if( team !== null && team !== ""){
+					d3.json("http://localhost:5000/popularity/"+team, function(error, days){
+
+						var barsPos = svg.selectAll("rect.barPos").data(days);
 			
-			barsPos.enter().append("rect").classed("barPos", true);
+						barsPos.enter().append("rect").classed("barPos", true);
 
-			barsPos
-			.attr("x", function (d,i) { return 60 + 10 + i * 80;})
-			.attr("width",30)
-			.attr("y", function(d) {
-				return height - (d.pos_count/50).toPrecision(4);
-			})
-			.attr("height", function (d) { return (d.pos_count/50).toPrecision(4);})
-			.attr("fill", "teal");
+						barsPos
+						.attr("x", function (d,i) { return 60 + 10 + i * 80;})
+						.attr("width",30)
+						.attr("y", function(d) {
+							return height - (d.pos_count/50).toPrecision(4);
+						})
+						.attr("height", function (d) { return (d.pos_count/50).toPrecision(4);})
+						.attr("fill", "teal");
 
 
-			var barsNeg = svg.selectAll("rect.barNeg").data(days);
+						var barsNeg = svg.selectAll("rect.barNeg").data(days);
 			
-			barsNeg.enter().append("rect").classed("barNeg", true);
+						barsNeg.enter().append("rect").classed("barNeg", true);
 
-			barsNeg
-			.attr("x", function (d,i) { return 60 + 10 + i * 80 + 30;})
-			.attr("width",30)
-			.attr("y", function(d) {
-				return height - (d.neg_count/50).toPrecision(4);
-			})
-			.attr("height", function (d) { return (d.neg_count/50).toPrecision(4);})
-			.attr("fill", "red");
-
-
-			svg.selectAll("text.pos_count")
-			.data(days)
-			.enter()
-			.append("text")
-			.classed("pos_count", true)
-			.text(function(d) {
-				return d.pos_count;
-			})
-			.attr("x", function (d,i) { return 60 + 10 + i * 80 + 15;})
-			.attr("y", function(d) {
-				return height - (d.pos_count/50).toPrecision(4) - 1;
-			})
-			.style("text-anchor", "middle")
+						barsNeg
+						.attr("x", function (d,i) { return 60 + 10 + i * 80 + 30;})
+						.attr("width",30)
+						.attr("y", function(d) {
+							return height - (d.neg_count/50).toPrecision(4);
+						})
+						.attr("height", function (d) { return (d.neg_count/50).toPrecision(4);})
+						.attr("fill", "red");
 
 
-			svg.selectAll("text.neg_count")
-			.data(days)
-			.enter()
-			.append("text")
-			.classed("neg_count", true)
-			.text(function(d) {
-				return d.neg_count;
-			})
-			.attr("x", function (d,i) { return 60 + 10 + i * 80 + 45;})
-			.attr("y", function(d) {
-				return height - (d.neg_count/50).toPrecision(4) - 1;
-			})
-			.style("text-anchor", "middle")
+						svg.selectAll("text.pos_count")
+						.data(days)
+						.enter()
+						.append("text")
+						.classed("pos_count", true)
+						.text(function(d) {
+							return d.pos_count;
+						})
+						.attr("x", function (d,i) { return 60 + 10 + i * 80 + 15;})
+						.attr("y", function(d) {
+							return height - (d.pos_count/50).toPrecision(4) - 1;
+						})
+						.style("text-anchor", "middle");
+
+
+						svg.selectAll("text.neg_count")
+						.data(days)
+						.enter()
+						.append("text")
+						.classed("neg_count", true)
+						.text(function(d) {
+							return d.neg_count;
+						})
+						.attr("x", function (d,i) { return 60 + 10 + i * 80 + 45;})
+						.attr("y", function(d) {
+							return height - (d.neg_count/50).toPrecision(4) - 1;
+						})
+						.style("text-anchor", "middle");
 
 
 
 
-			svg.selectAll("text.date")
-			.data(days)
-			.enter()
-			.append("text")
-			.classed("date", true)
-			.text(function(d) {
-				return d.date;
-			})
-			.attr("x", function (d,i) { return 60 + 10 + i * 80 + 30;})
-			.attr("y", function(d) {
-				return 315;
-			})
-			.style("text-anchor", "middle")
+						svg.selectAll("text.date")
+						.data(days)
+						.enter()
+						.append("text")
+						.classed("date", true)
+						.text(function(d) {
+							return d.date;
+						})
+						.attr("x", function (d,i) { return 60 + 10 + i * 80 + 30;})
+						.attr("y", function(d) {
+							return 315;
+						})
+						.style("text-anchor", "middle")
+						.on("click", function(d) { dateClick(d.date) });
 
 
-		});
+					});
+				}
 
-			
+
+				function dateClick(date) {
+					console.log(date);
+					document.getElementById('stats_date').value = date;
+					document.getElementById('choose_team').value = team;
+					document.forms["teams_form"].submit();
+				}
+
+
 		
-			// Vertical Scale
-			var vScale = d3.scale.linear()
-				.domain([0, height*50])
-				.range([height, 0]);
+					// Vertical Scale
+					var vScale = d3.scale.linear()
+						.domain([0, height*50])
+						.range([height, 0]);
 
-			// V Axis
-			var vAxis = d3.svg.axis()
-				.scale(vScale)
-				.orient('left')
-				.ticks(5);
-
-
-			var vGuide = d3.select('svg').append('g');
-
-			vAxis(vGuide);
-
-			vGuide.attr('transform','translate(60,0)');
-			vGuide.selectAll('path')
-				.style('fill','none')
-				.style('stroke','#000')
-			vGuide.selectAll('line')
-				.style('stroke','#000')
+					// V Axis
+					var vAxis = d3.svg.axis()
+						.scale(vScale)
+						.orient('left')
+						.ticks(5);
 
 
+					var vGuide = d3.select('svg').append('g');
+
+					vAxis(vGuide);
+
+					vGuide.attr('transform','translate(60,0)');
+					vGuide.selectAll('path')
+						.style('fill','none')
+						.style('stroke','#000')
+					vGuide.selectAll('line')
+						.style('stroke','#000')
+
+				if( team !== null && team !== ""){
+					d3.json("http://localhost:5000/stats/possesion/"+team, function(error, possesions){
+				
+						var svg2 = d3.select("#results2").append("svg").attr("width",750)
+												.attr("height",height+30);			
+
+						var rectangles = svg2.selectAll("rect")
+								.data(possesions)
+								.enter()
+								.append("rect");
+
+
+						var ramp = d3.scale.linear().domain([0,1]).range(["red","blue"]);
+
+
+						var rectangleAttributes = rectangles
+								.attr("x", function (d,i) { return 60 + 10 + i * 80; })
+								.attr("y", 25)
+								.attr("height", 20)
+								.attr("width", 60)
+								.style("fill", function(d) { return ramp(d.value); });
+
+				});}
+
+				
+
+
+				
+
+			</script>
+
+
+		</div> <!-- end mainGraph -->
+
+		<div id="statsWrapper">
+			<div id="teamLogo">
+				<br/>
+				<img id="team_logo" src=""></img> <!-- end team_logo -->
+				<script>
+				if( team !== null && team !== ""){
+					var logo_path = "images/"+team+".png";
+					document.getElementById('team_logo').src = logo_path;
+				}
+				</script>
+			</div> <!-- end teamLogo -->
+			<div id="statsGraph">
+				<div id="pieChart">
+				</div>  <!-- end pieChart -->
+				<br/>
+				<div id="stats">
+					Passes : <input type="text" name="passes" id="passes" value="" readonly><br>
+					Shots On Target : <input type="text" name="shotsOnTarget" id="shotsOnTarget" value="" readonly><br>
+					Shots Off Target : <input type="text" name="shotsOffTarget" id="shotsOffTarget" value="" readonly><br>
+					Corners : <input type="text" name="corners" id="corners" value="" readonly><br>
+					Fouls Conceded : <input type="text" name="foulsConceded" id="foulsConceded" value="" readonly><br>
+					Goals : <input type="text" name="goals" id="goals" value="" readonly><br>
+					Fouls Won : <input type="text" name="foulsWon" id="foulsWon" value="" readonly><br>
+					Possesion : <input type="text" name="possesion" id="possesion" value="" readonly><br>
+					OffSide : <input type="text" name="offSide" id="offSide" value="" readonly><br>
+					Yellow Cards : <input type="text" name="yellowCards" id="yellowCards" value="" readonly><br>
+
+				</div>  <!-- end stats -->
+				
+			</div>  <!-- end statsGraph -->
 			
-/*			svg.append("g")
-				.attr("class", "vScale axis")
-				.call(vAxis);
-*/
+			<script>
+
+			if(team !== null && team !== "" && stats_date !== null && stats_date !== ""){
+
+				d3.json("http://localhost:5000/popularity/"+team+"/"+stats_date, function(error, matchTweets){
+
+					var width = 200;
+					var height = 200;
+					var radius = Math.min(width, height) / 2;
 
 
-		var svg2 = d3.select("#results2").append("svg").attr("width",750).attr("height",height+30);			
-		
-/*		var jsonRectangles = [
-			{ "color" : "green" },
-			{ "color" : "purple" }];
-*/
-		var jsonRectangles = [
-			{ "value" : "0" },
-			{ "value" : "1" },
-			{ "value" : "1" },
-			{ "value" : "0" },
-			{ "value" : "1" },
-			{ "value" : "0" }];
+					var color = d3.scale.ordinal().range(['#A60F2B', '#648C85']);
 
-		var rectangles = svg2.selectAll("rect")
-				.data(jsonRectangles)
-				.enter()
-				.append("rect");
+					var svg3 = d3.select('#pieChart')
+							.append('svg')
+							.attr('width', width)
+							.attr('height', height)
+							.append('g')
+							.attr('transform', 'translate(' + (width / 2) +  ',' + (height / 2) + ')');
+
+					var arc = d3.svg.arc().outerRadius(radius);
 
 
-		var ramp = d3.scale.linear().domain([0,1]).range(["red","blue"]);
+					var pie = d3.layout.pie()
+						.value(function(d) { return d.count; })
+						.sort(null);
+
+					var path = svg3.selectAll('path')
+						.data(pie(matchTweets))
+						.enter()
+						.append('path')
+						.attr('d', arc)
+						.attr('fill', function(d, i) { 
+							return color(d.data.label);
+						});
+
+				});
+
+				var j = $.getJSON('http://localhost:5000/test/'+team+'/'+stats_date,
+						function(stats) { 
+							console.log('Data returned from server: ', stats[0]);
+							document.getElementById("stats").style.display= "inline";
+							document.getElementById('passes').value = stats[0].passes;
+							document.getElementById('shotsOnTarget').value = stats[0].shotsOnTarget;
+							document.getElementById('shotsOffTarget').value = stats[0].shotsOffTarget;
+							document.getElementById('corners').value = stats[0].corners;
+							document.getElementById('foulsConceded').value = stats[0].foulsConceded;
+							document.getElementById('goals').value = stats[0].goals;
+							document.getElementById('foulsWon').value = stats[0].foulsWon;
+							document.getElementById('possesion').value = stats[0].possesion;
+							document.getElementById('offSide').value = stats[0].offSide;
+							document.getElementById('yellowCards').value = stats[0].yellowCards;
+
+						})
+					.done(function() { console.log('Successful execution');})
+					.fail(function() {console.log('Error');})
+					.always(function() { console.log('Complete');
+			});
 
 
-		var rectangleAttributes = rectangles
-				.attr("x", function (d,i) { return 60 + 10 + i * 80; })
-				.attr("y", 25)
-				.attr("height", 20)
-				.attr("width", 60)
-				.style("fill", function(d) { return ramp(d.value); });
-
-	</script>
+			} else{
+				document.getElementById("stats").style.display= "none";			
+			}
 
 
+			</script>
+					
+		</div> <!-- end statsWrapper -->
+		<div class="clear"></div>
+		<div id="footer">
+		footer
+		</div> <!-- end footer -->
 
-
-
-
+	</div> <!-- end wrapper -->
 
 </body>
 </html>
