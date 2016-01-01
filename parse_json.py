@@ -4,7 +4,7 @@ import sys
 import glob
 import json
 
-statsFile = open('../Premier_Data/stats.json')
+statsFile = open('Premier_Data/stats.json')
 
 teamsDic = {"Arsenal":"1","A Villa":"2","B'mouth":"3","Chelsea":"4","C Palace":"5","Everton":"6","Leicester":"7","Liverpool":"8",
 			"Man City":"9","Man Utd":"10","Newcastle":"11","Norwich":"12","So'ton":"13","Stoke":"14","S'land":"15","Swansea":"16",
@@ -29,9 +29,9 @@ with statsFile as data_file:
 				badOutput.append(cdoc)
 
 
-with open('../cleaned_premier_data/cleaned_stats.json', mode = 'w') as f:
+with open('cleaned_premier_data/cleaned_stats.json', mode = 'w') as f:
  	json.dump(output, f, indent = 2)
 
-with open('../cleaned_premier_data/badformat_stats.json', mode = 'w') as g:
+with open('cleaned_premier_data/badformat_stats.json', mode = 'w') as g:
 	json.dump(badOutput, g, indent = 2)
 

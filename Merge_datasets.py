@@ -5,9 +5,9 @@ import sys
 import json
 import datetime
 
-statsFile = open('../cleaned_premier_data/cleaned_stats.json', 'r')
-gtrendsFile = open('../cleaned_premier_data/cleaned_gtrends.csv', 'rU')
-mergeFile = open('../cleaned_premier_data/merged_data.csv', 'wb+')
+statsFile = open('cleaned_premier_data/cleaned_stats.json', 'r')
+gtrendsFile = open('cleaned_premier_data/cleaned_gtrends.csv', 'rU')
+mergeFile = open('cleaned_premier_data/merged_data.csv', 'wb+')
 #destFile = open('../cleaned_premier_data/final_dataset.csv', 'wb+')
 
 
@@ -35,4 +35,4 @@ for i in gReader:
 		if i[3] == str(j["teamNo"]) and (datetime.datetime.strptime(j["matchDate"], '%Y-%m-%d') >= datetime.datetime.strptime(i[1], '%Y-%m-%d')) and (datetime.datetime.strptime(j["matchDate"], '%Y-%m-%d') <= datetime.datetime.strptime(i[2], '%Y-%m-%d')):
 			f.writerow([j["matchDate"],j["matchId"], j["team"], j["teamNo"], j["passes"], j["shotsOnTarget"], j["shotsOffTarget"], j["corners"], j["foulsConceded"], j["accuratePasses"], j["goals"], j["foulsWon"], j["possesion"], j["offSide"], j["yellowCards"],i[4]])
 
-reader = csv.reader(open('../cleaned_premier_data/merged_data.csv', 'rU'))
+reader = csv.reader(open('cleaned_premier_data/merged_data.csv', 'rU'))

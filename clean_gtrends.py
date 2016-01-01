@@ -3,8 +3,8 @@ import os.path
 import csv
 import sys
 
-fileDir = open('../Premier_Data/chelseafc.csv','rU')
-exportFile = open('../cleaned_premier_data/chelseafc_cleaned.csv', 'w+')
+fileDir = open('Premier_Data/chelseafc.csv','rU')
+exportFile = open('cleaned_premier_data/chelseafc_cleaned.csv', 'w+')
 
 reader = csv.reader(fileDir)
 

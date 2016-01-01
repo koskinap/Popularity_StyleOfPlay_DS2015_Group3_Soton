@@ -5,8 +5,8 @@ import sys
 import glob
 
 fileDir = ''
-exportFile = open('../cleaned_premier_data/cleaned_gtrends.csv', 'w+')
-path =r'../Premier_Data' 
+exportFile = open('cleaned_premier_data/cleaned_gtrends.csv', 'w+')
+path =r'Premier_Data' 
 allFiles = glob.glob(path + "/*.csv")
 
 teamNo = 0
