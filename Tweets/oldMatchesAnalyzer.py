@@ -105,9 +105,9 @@ def analyzeMatchTweets(match):
 		while 1 == 1 :
 			try:
 				if (max_id <= 0):
-					new_tweets = api.search(q=searchQuery, count=50,until='2015-12-28')
+					new_tweets = api.search(q=searchQuery, count=50,until='2015-12-31')
 				else:
-					new_tweets = api.search(q=searchQuery, count=50, max_id=str(max_id - 1),until='2015-12-28')
+					new_tweets = api.search(q=searchQuery, count=50, max_id=str(max_id - 1),until='2015-12-31')
 				if not new_tweets:
 					print("No more tweets found")
 					break
@@ -218,7 +218,7 @@ def findFeaturesSentiment(tweet):
 def prepareClassifier(trainingFile,classifierKey):
 	
 	tweets = []
-	
+
 	with open(trainingFile) as training:
 		tweetsFile = json.load(training)
 		for tweet in tweetsFile["tweets"]:
