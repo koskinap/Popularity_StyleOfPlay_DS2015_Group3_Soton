@@ -34,5 +34,7 @@ for i in gReader:
 	for j in output:
 		if i[3] == str(j["teamNo"]) and (datetime.datetime.strptime(j["matchDate"], '%Y-%m-%d') >= datetime.datetime.strptime(i[1], '%Y-%m-%d')) and (datetime.datetime.strptime(j["matchDate"], '%Y-%m-%d') <= datetime.datetime.strptime(i[2], '%Y-%m-%d')):
 			f.writerow([j["matchDate"],j["matchId"], j["team"], j["teamNo"], j["passes"], j["shotsOnTarget"], j["shotsOffTarget"], j["corners"], j["foulsConceded"], j["accuratePasses"], j["goals"], j["foulsWon"], j["possesion"], j["offSide"], j["yellowCards"],i[4]])
+		# else:
+		# 	f.writerow([j["matchDate"],j["matchId"], j["team"], j["teamNo"], j["passes"], j["shotsOnTarget"], j["shotsOffTarget"], j["corners"], j["foulsConceded"], j["accuratePasses"], j["goals"], j["foulsWon"], j["possesion"], j["offSide"], j["yellowCards"],"0")
 
 reader = csv.reader(open('cleaned_premier_data/merged_data.csv', 'rU'))
