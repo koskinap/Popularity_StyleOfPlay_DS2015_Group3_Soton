@@ -8,7 +8,6 @@ from os import listdir
 from os.path import isfile
 
 
-
 #app = Flask(__name__)
 
 app = Flask(__name__, static_url_path = "", static_folder = "static")
@@ -87,41 +86,65 @@ def gdata(team):
 		entry["neg_count"] = countNeg	
 		json_docs.append(entry)
 
-	json_docs = json.dumps(json_docs)
+	newlist = sorted(json_docs, key=lambda k: k['date'])
+
+	json_docs = json.dumps(newlist)
 
 	return json_docs
 
-@app.route("/stats/possesion/<string:team>")
-def teamPossession(team):
+@app.route("/stats/<string:feature>/<string:team>")
+def teamFeature(team,feature):
+
+	teamsDic = {"ARSENAL":"1","ASTONVILLA":"2","BOURNEMOUTH":"3","CHELSEA":"4","CRYSTALPALACE":"5","EVERTON":"6","LEICESTER":"7","LIVERPOOL":"8",
+		"MANCITY":"9","MANUNITED":"10","NEWCASTLE":"11","NORWICH":"12","SOUTHAMPTON":"13","STOKE":"14","SUNDERLAND":"15","SWANSEA":"16",
+		"TOTENHAM":"17","WATFORD":"18","WESTBROM":"19","WESTHAM":"20"}
 
 	json_docs = []
 
 	dates = [re.split('_', f)[0] for f in listdir('.') if (isfile(f) and team in re.split('_', f))]
 	
-	with open('stats.json') as data_file:
+	featuresFile = 'classified_data.json'
+
+	datesWithNoStats = dates # Has all the dates having tweets at first, a date that has stats will be remove from it
+
+	with open(featuresFile) as data_file:
 		data = json.load(data_file)
 
 		for stat in data:
 
 			statDate = stat['matchDate']
-			dateParts = re.split('/', statDate)
-			formattedDate = dateParts[2].replace(' ','')+"-"+dateParts[1]+"-"+dateParts[0]
-			print(formattedDate)
-			if (stat['team'] == team and formattedDate in dates):
-				value = stat['possesion']
-				level = getPossessionLevel(float(value))
-				possession = {}
-				possession["value"] = level
-				json_docs.append(possession)
 
-	json_docs = json.dumps(json_docs)
+			teamNo = teamsDic[team]
+
+#			if (stat['team'] == team and statDate in dates):
+			if (stat['teamNo'] == teamNo and statDate in dates):
+				feat = {}
+				feat["value"] = stat[feature]
+				feat["date"] = statDate
+				json_docs.append(feat)
+				datesWithNoStats.remove(statDate)
+
+		for date in datesWithNoStats :
+			feat = {}
+			feat["value"] = "0"
+			feat["date"] = date
+			json_docs.append(feat)
+				
+	orderedDocs = sorted(json_docs, key=lambda k: k['date'])
+	json_docs = json.dumps(orderedDocs)
 
 	return json_docs
 
-@app.route("/test/<string:team>/<string:date>")
-def test(team, date):
+
+
+@app.route("/stats_details/<string:team>/<string:date>")
+def stats(team, date):
 		
 	json_docs = []
+
+	teamsDic = {"ARSENAL":"1","ASTONVILLA":"2","BOURNEMOUTH":"3","CHELSEA":"4","CRYSTALPALACE":"5","EVERTON":"6","LEICESTER":"7","LIVERPOOL":"8",
+		"MANCITY":"9","MANUNITED":"10","NEWCASTLE":"11","NORWICH":"12","SOUTHAMPTON":"13","STOKE":"14","SUNDERLAND":"15","SWANSEA":"16",
+		"TOTENHAM":"17","WATFORD":"18","WESTBROM":"19","WESTHAM":"20"}
 
 	with open('stats.json') as data_file:
 		data = json.load(data_file)
@@ -132,6 +155,9 @@ def test(team, date):
 			dateParts = re.split('/', statDate)
 			formattedDate = dateParts[2].replace(' ','')+"-"+dateParts[1]+"-"+dateParts[0]
 
+			teamNo = teamsDic[team]
+
+#			if (stat['team'] == team and statDate in dates):
 			if (stat['team'] == team and formattedDate == date):
 				_stat = {}
 				_stat["passes"] = stat['passes']
@@ -151,15 +177,6 @@ def test(team, date):
 	json_docs = json.dumps(json_docs)
 
 	return json_docs
-
-def getPossessionLevel(value):
-
-	if value < 35 :
-		return 0
-	if 35 < value < 60 :
-		return 1
-	if value > 60 :
-		return 2 
 
 
 if __name__ == "__main__":
