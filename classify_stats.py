@@ -40,6 +40,7 @@ pressureFactors = [1, 1, 1]
 #efficiency ?????do we really need this? we have accuracy
 
 output = []
+output2 = []
 with inputFile as infile, csvOutputFile as outFile:
 	reader = csv.reader(inputFile)
 	writer = csv.writer(outFile)
@@ -70,6 +71,7 @@ with inputFile as infile, csvOutputFile as outFile:
 		#print(rates)
  		# After that comes the access of specific elements of the list for every feature of play
  		doc = {}
+ 		doc2 = {}
  		for i in range(0,4):
  			doc[featureKeys[i]] = static[i]
  		doc[featureKeys [len (featureKeys) - 1]] =  int(popIndex)
@@ -99,6 +101,8 @@ with inputFile as infile, csvOutputFile as outFile:
  			temp5 += pressureFactors[index5] * rates[el5]
  		doc[featureKeys[8]] = temp5
 
+ 		doc2 = doc
+ 		output2.append(doc2)
  		output.append(doc)
 
  		csvList = static
@@ -115,7 +119,7 @@ with inputFile as infile, csvOutputFile as outFile:
 			csvList.append(level)
 			doc[featureKeys[j]] = level
 
-		#for 
+
 
  		csvList.append(popIndex)
  		writer.writerow(csvList)
@@ -123,5 +127,7 @@ with inputFile as infile, csvOutputFile as outFile:
 with open('cleaned_premier_data/classified_data.json', mode = 'w') as f:
  	json.dump(output, f, indent = 2)
 
+with open('cleaned_premier_data/detailed_classified_data.json', mode = 'w') as f:
+ 	json.dump(output2, f, indent = 2)
 
 
