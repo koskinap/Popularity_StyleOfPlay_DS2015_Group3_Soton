@@ -4,9 +4,11 @@ import re
 from flask import Flask
 from flask import render_template
 
+import os
 from os import listdir
 from os.path import isfile
 
+import logging
 
 #app = Flask(__name__)
 
@@ -26,6 +28,20 @@ def matchpopularity(team, date):
 
 	teamFiles = [f for f in listdir('.') if (isfile(f) and team in re.split('_', f) and date in re.split('_', f))]
 
+	#directory = os.path.join(os.path.dirname(__file__), '../Tweets/TweetsFiles')
+	#directory = os.path.join(os.path.dirname(__file__), '/Tweets/TweetsFiles')
+	
+	#APP_ROOT = os.path.dirname(os.path.abspath(__file__))   # refers to application_top
+	#APP_STATIC = os.path.join(APP_ROOT, 'static')
+
+	#directory = os.path.join(APP_STATIC, 'Tweets/TweetsFiles/')
+	#print(directory)
+
+	#teamFiles = [f for f in listdir(directory) if (isfile(f) and team in re.split('_', f) and date in re.split('_', f))]
+	
+
+
+	#logging.info(teamFiles[0])
 	teamFile = teamFiles[0]
 
 	countPos = 0
@@ -139,6 +155,10 @@ def teamFeature(team,feature):
 
 @app.route("/stats_details/<string:team>/<string:date>")
 def stats(team, date):
+
+	teamsDic = {"ARSENAL":"1","ASTONVILLA":"2","BOURNEMOUTH":"3","CHELSEA":"4","CRYSTALPALACE":"5","EVERTON":"6","LEICESTER":"7","LIVERPOOL":"8",
+		"MANCITY":"9","MANUNITED":"10","NEWCASTLE":"11","NORWICH":"12","SOUTHAMPTON":"13","STOKE":"14","SUNDERLAND":"15","SWANSEA":"16",
+		"TOTENHAM":"17","WATFORD":"18","WESTBROM":"19","WESTHAM":"20"}
 		
 	json_docs = []
 
@@ -158,7 +178,8 @@ def stats(team, date):
 			teamNo = teamsDic[team]
 
 #			if (stat['team'] == team and statDate in dates):
-			if (stat['team'] == team and formattedDate == date):
+#			if (stat['team'] == team and formattedDate == date):
+			if (stat['teamNo'] == teamNo and formattedDate == date):
 				_stat = {}
 				_stat["passes"] = stat['passes']
 				_stat["shotsOnTarget"] = stat['shotsOnTarget']
