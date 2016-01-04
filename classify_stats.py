@@ -74,34 +74,45 @@ with inputFile as infile, csvOutputFile as outFile:
  		doc2 = {}
  		for i in range(0,4):
  			doc[featureKeys[i]] = static[i]
+ 			doc2[featureKeys[i]] = static[i]
+
  		doc[featureKeys [len (featureKeys) - 1]] =  int(popIndex)
+ 		doc2[featureKeys [len (featureKeys) - 1]] =  int(popIndex)
+
 
  		temp1 = 0
  		for index1,el1 in enumerate(attack):
  			temp1 += attackFactors[index1] * rates[el1]
  		doc[featureKeys[4]] = temp1
+ 		doc2[featureKeys[4]] = temp1
+
 
 		temp2 = 0
  		for index2,el2 in enumerate(teamPlay):
  			temp2 += teamPlayFactors[index2] * rates[el2]
  		doc[featureKeys[5]] = temp2
+ 		doc2[featureKeys[5]] = temp2
+
 
  		temp3 = 0
  		for index3,el3 in enumerate(aggressiveness):
  			temp3 += aggressivenessFactors[index3] * rates[el3]
  		doc[featureKeys[6]] = temp3
+		doc2[featureKeys[6]] = temp3
 
  		temp4 = 0
  		for index4,el4 in enumerate(accuracy):
  			temp4 += accuracyFactors[index4] * rates[el4]
  		doc[featureKeys[7]] = temp4
+ 		doc2[featureKeys[7]] = temp4
 
  		temp5 = 0
  		for index5,el5 in enumerate(pressure):
  			temp5 += pressureFactors[index5] * rates[el5]
  		doc[featureKeys[8]] = temp5
+ 		doc2[featureKeys[8]] = temp5
 
- 		doc2 = doc
+
  		output2.append(doc2)
  		output.append(doc)
 
