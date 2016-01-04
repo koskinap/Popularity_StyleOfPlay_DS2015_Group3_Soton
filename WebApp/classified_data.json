@@ -768,42 +768,6 @@
     "Accuracy": 2
   }, 
   {
-    "matchDate": "2015-12-19", 
-    "Aggressiveness": 1, 
-    "matchId": "11111", 
-    "teamNo": "4", 
-    "googleTrendsIndex": 80, 
-    "Pressure": 1, 
-    "Attack": 3, 
-    "team": "Chelsea", 
-    "Teamplay": 1, 
-    "Accuracy": 3
-  }, 
-  {
-    "matchDate": "2015-12-26", 
-    "Aggressiveness": 3, 
-    "matchId": "222222", 
-    "teamNo": "4", 
-    "googleTrendsIndex": 80, 
-    "Pressure": 2, 
-    "Attack": 1, 
-    "team": "Chelsea", 
-    "Teamplay": 3, 
-    "Accuracy": 1
-  }, 
-  {
-    "matchDate": "2015-12-28", 
-    "Aggressiveness": 2, 
-    "matchId": "33333", 
-    "teamNo": "4", 
-    "googleTrendsIndex": 80, 
-    "Pressure": 1, 
-    "Attack": 2, 
-    "team": "Chelsea", 
-    "Teamplay": 1, 
-    "Accuracy": 2
-  }, 
-  {
     "matchDate": "2015-08-08", 
     "Aggressiveness": 2, 
     "matchId": "341194", 
@@ -1953,42 +1917,6 @@
     "Attack": 2, 
     "team": "Man Utd", 
     "Teamplay": 2, 
-    "Accuracy": 2
-  },  
-  {
-    "matchDate": "2015-12-19", 
-    "Aggressiveness": 3, 
-    "matchId": "341338", 
-    "teamNo": "10", 
-    "googleTrendsIndex": 74, 
-    "Pressure": 1, 
-    "Attack": 2, 
-    "team": "Man Utd", 
-    "Teamplay": 1, 
-    "Accuracy": 2
-  },  
-  {
-    "matchDate": "2015-12-26", 
-    "Aggressiveness": 2, 
-    "matchId": "341338", 
-    "teamNo": "10", 
-    "googleTrendsIndex": 74, 
-    "Pressure": 2, 
-    "Attack": 1, 
-    "team": "Man Utd", 
-    "Teamplay": 2, 
-    "Accuracy": 3
-  },  
-  {
-    "matchDate": "2015-12-28", 
-    "Aggressiveness": 1, 
-    "matchId": "341338", 
-    "teamNo": "10", 
-    "googleTrendsIndex": 74, 
-    "Pressure": 3, 
-    "Attack": 2, 
-    "team": "Man Utd", 
-    "Teamplay": 1, 
     "Accuracy": 2
   }, 
   {
