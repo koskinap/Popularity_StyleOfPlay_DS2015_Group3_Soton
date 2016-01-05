@@ -79,21 +79,9 @@
 				clear: both;			
 			}
 			
-			
-			#ScatterPlotText{
-				text-align:center;
-				width: 1500px;
-				margin:0 auto;
-				text-align:center
-			}
-			
 			#scatter-load{
 				font-family:"Helvetica Neue";
 				color: #686765;
-				height: 1500px;
-				width: 1500px;
-				
-				margin: 0 auto;
 			}
 			.name {
 				float:right;
@@ -102,12 +90,12 @@
 			.axis {
 				fill: none;
 				stroke: #AAA;
-				stroke-width: 2.5px;
+				stroke-width: 2px;
 			}
 			text {
 				stroke: none;
 				fill: #666666;
-				font-size: 1em;
+				font-size: .6em;
 				font-family:"Helvetica Neue"
 			}
 			.label {
@@ -139,35 +127,7 @@
 			<form id="teams_form" action="">
 			<div id="teamsMenu">
 				
-				<select name="team">
-					<option value="ARSENAL">ARSENAL</option>
-					<option value="ASTONVILLA">ASTONVILLA</option>
-					<option value="BOURNEMOUTH">BOURNEMOUTH</option>
-					<option value="CHELSEA">CHELSEA</option>
-					<option value="CRYSTALPALACE">CRYSTALPALACE</option>
-					<option value="EVERTON">EVERTON</option>
-					<option value="LEICESTER">LEICESTER</option>
-					<option value="LIVERPOOL">LIVERPOOL</option>
-					<option value="MANCITY">MANCITY</option>
-					<option value="MANUNITED">MANUNITED</option>
-					<option value="NEWCASTLE">NEWCASTLE</option>
-					<option value="NORWICH">NORWICH</option>
-					<option value="SOUTHAMPTON">SOUTHAMPTON</option>
-					<option value="STOKE">STOKE</option>
-					<option value="SUNDERLAND">SUNDERLAND</option>
-					<option value="SWANSEA">SWANSEA</option>
-					<option value="TOTENHAM">TOTENHAM</option>
-					<option value="WATFORD">WATFORD</option>
-					<option value="WESTBROM">WESTBROM</option>
-					<option value="WESTHAM">WESTHAM</option>
-
-
-
-
-
-
-				</select>
-				<br>
+			
 				<select name="feature">
 					<option value="Accuracy">Accuracy</option>
 					<option value="Aggressiveness">Aggressiveness</option>
@@ -227,24 +187,50 @@
 		<!-- end mainGraph -->
 		
 		
-<!-- 		<script> document.getElementById('teamNameTitle').value = team;</script> -->
 		
-		<input id="teamNameTitle"  type="text" value="" />
-	
-	
-	
-		<div id="ScatterPlotText"> 
-		
-		<h1> Scatter Plot of and their Style of Play </h1></div> 	
-		
+		<h3>Scatter Plot of The Style of Play</h3>
+
 		<div id="scatter-load"></div>
-		
-		
 			
+		
+<!-- 		<script> -->
+<!-- 		var data = [{ -->
+<!-- 			"name": "Dairy Milk", -->
+<!-- 				"manufacturer": "cadbury", -->
+<!-- 				"value1": 45, -->
+<!-- 				"value2": 2 -->
+<!-- 		}, { -->
+<!-- 			"name": "Galaxy", -->
+<!-- 				"manufacturer": "Nestle", -->
+<!-- 				"value1": 42, -->
+<!-- 				"value2": 3 -->
+<!-- 		 -->
+<!-- 		}, -->
+<!-- 		{ -->
+<!-- 			"name": "suoprnam", -->
+<!-- 				"manufacturer": "Nestle", -->
+<!-- 				"value1": 35, -->
+<!-- 				"value2": 2 -->
+<!-- 		 -->
+<!-- 		}]; -->
+<!--  -->
+<!-- </script> -->
+
+
+
+
+
+
+
+	
 		<script>
 		
-		d3.json("http://localhost:5000/data/"+team+"/"+feature, function(error, data){
-			
+		d3.json("http://localhost:5000/data_allteams/"+feature, function(error, data){
+			//		data.forEach(function(d) {
+			//			d.value1 = parseDate(d.value1);
+			//			d.value2 = +d.value2;
+			//		}
+			//		);
 			showScatterPlot(data);
 				console.log(data); // this is your data
 			})
@@ -255,13 +241,13 @@
 			// just to have some space around items. 
 			var margins = {
 				"left": 40,
-					"right": 80,
+					"right": 30,
 					"top": 30,
-					"bottom": 80
+					"bottom": 30
 			};
 			
-			var width = 1000;
-			var height = 1200;
+			var width = 2000;
+			var height = 1000;
 			
 			// this will be our colour scale. An Ordinal scale.
 			var colors = d3.scale.category10();
@@ -298,12 +284,12 @@
 				.attr("text-anchor", "end")
 				.attr("x", width / 2)
 				.attr("y", height - 35)
-				.text("Sum of Feautures");
+				.text("Google indexes");
 
 
 			// this is the actual definition of our x and y axes. The orientation refers to where the labels appear - for the x axis, below or above the line, and for the y axis, left or right of the line. Tick padding refers to how much space between the tick and the label. There are other parameters too - see https://github.com/mbostock/d3/wiki/SVG-Axes for more information
-			var xAxis = d3.svg.axis().scale(x).orient("bottom").tickPadding(10);
-			var yAxis = d3.svg.axis().scale(y).orient("left").tickPadding(10);
+			var xAxis = d3.svg.axis().scale(x).orient("bottom").tickPadding(2);
+			var yAxis = d3.svg.axis().scale(y).orient("left").tickPadding(2);
 
 			// this is where we select the axis we created a few lines earlier. See how we select the axis item. in our svg we appended a g element with a x/y and axis class. To pull that back up, we do this svg select, then 'call' the appropriate axis object for rendering.    
 			svg.selectAll("g.y.axis").call(yAxis);
@@ -329,7 +315,7 @@
 				.style("fill", function (d) {
 					// remember the ordinal scales? We use the colors scale to get a colour for our manufacturer. Now each node will be coloured
 					// by who makes the data. 
-					return colors(d.manufacturer);
+					return colors(d.teamNo);
 			});
 
 			// now we add some text, so we can see what each item is.
@@ -338,7 +324,7 @@
 				.attr("dy", -10)
 				.text(function (d) {
 					// this shouldn't be a surprising statement.
-					return d.name;
+					return d.teamName;
 			});
 		}
 		
@@ -356,7 +342,7 @@
 				<img id="team_logo" src=""></img> <!-- end team_logo -->
 				<script>
 				if( team !== null && team !== ""){
-					var logo_path = "../images/"+team+".png";
+					var logo_path = "images/"+team+".png";
 					document.getElementById('team_logo').src = logo_path;
 				}
 				</script>
