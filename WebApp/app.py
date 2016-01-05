@@ -248,7 +248,52 @@ def data(team,feature):
 		json_docs = json.dumps(json_docs)
 
 		return json_docs
-		
+
+@app.route("/3/")
+def index3():
+	return render_template("index3.html")
+
+@app.route("/data_allteams/<string:feature>")
+def data_allteams(feature):
+
+				json_docs = []
+
+
+
+				sourceFile = open('../cleaned_premier_data/classified_data.json')
+
+
+				with sourceFile as f:
+					data = json.load(f)
+
+					for doc in data:
+						
+						feat = {}
+						feat["value1"] = doc[feature]
+						feat["value2"] = doc["googleTrendsIndex"]
+						feat["teamNo"] = doc["teamNo"]
+						feat["teamName"] = doc["team"]
+
+						json_docs.append(feat)
+						
+				# feat = {}
+				# feat["value1"] = team
+				# feat["value2"] = feature
+				# json_docs.append(feat)
+						
+				# feat2 = {}
+				# feat2["value1"] = team
+				# feat2["value2"] = feature
+				# json_docs.append(feat2)
+
+				# feat3 = {}
+				# feat3["value1"] = team
+				# feat3["value2"] = feature
+				# json_docs.append(feat3)
+								
+				json_docs = json.dumps(json_docs)
+
+				return json_docs		
 		
 if __name__ == "__main__":
     app.run(host='0.0.0.0',port=5000,debug=True)
