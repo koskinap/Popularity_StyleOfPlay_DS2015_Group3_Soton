@@ -253,6 +253,52 @@ def data(team,feature):
 def index3():
 	return render_template("index3.html")
 
+
+
+@app.route("/interest_features/<string:interest>")
+def interest_features(interest):
+
+	json_docs = []
+
+	sourceFile = open('../cleaned_premier_data/classified_data.json')
+	with sourceFile as f:
+		data = json.load(f)
+		for doc in data:
+
+			idx = doc["googleTrendsIndex"]
+			if((interest == "HIGH" and idx > 66) or (interest == "MED" and idx in range(34,67)) or (interest == "LOW" and idx < 34) ):
+				feat1 = {}
+				feat1["value1"] = "Accuracy"
+				feat1["value2"] = doc["Accuracy"]
+				json_docs.append(feat1)
+
+				feat2 = {}
+				feat2["value1"] = "Aggressiveness"
+				feat2["value2"] = doc["Aggressiveness"]
+				json_docs.append(feat2)
+				
+				feat3 = {}
+				feat3["value1"] = "Attack"
+				feat3["value2"] = doc["Attack"]
+				json_docs.append(feat3)
+
+				feat4 = {}
+				feat4["value1"] = "Teamplay"
+				feat4["value2"] = doc["Teamplay"]
+				json_docs.append(feat4)
+
+				feat5 = {}
+				feat5["value1"] = "Pressure"
+				feat5["value2"] = doc["Pressure"]
+				json_docs.append(feat5)	
+			
+
+					
+	json_docs = json.dumps(json_docs)
+
+	return json_docs
+
+
 @app.route("/data_allteams/<string:feature>")
 def data_allteams(feature):
 
