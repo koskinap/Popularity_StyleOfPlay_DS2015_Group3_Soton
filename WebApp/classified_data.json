@@ -18,7 +18,7 @@
     "teamNo": "1", 
     "googleTrendsIndex": 69, 
     "Pressure": 2, 
-    "Attack": 3, 
+    "Attack": 2, 
     "team": "Arsenal", 
     "Teamplay": 3, 
     "Accuracy": 3
@@ -416,8 +416,8 @@
     "Pressure": 1, 
     "Attack": 1, 
     "team": "A Villa", 
-    "Teamplay": 2, 
-    "Accuracy": 3
+    "Teamplay": 1, 
+    "Accuracy": 2
   }, 
   {
     "matchDate": "2015-12-13", 
@@ -945,7 +945,7 @@
     "Attack": 2, 
     "team": "Chelsea", 
     "Teamplay": 1, 
-    "Accuracy": 3
+    "Accuracy": 2
   }, 
   {
     "matchDate": "2015-08-08", 
@@ -954,7 +954,7 @@
     "teamNo": "5", 
     "googleTrendsIndex": 44, 
     "Pressure": 1, 
-    "Attack": 3, 
+    "Attack": 2, 
     "team": "C Palace", 
     "Teamplay": 1, 
     "Accuracy": 3
@@ -978,7 +978,7 @@
     "teamNo": "5", 
     "googleTrendsIndex": 74, 
     "Pressure": 2, 
-    "Attack": 3, 
+    "Attack": 2, 
     "team": "C Palace", 
     "Teamplay": 2, 
     "Accuracy": 1
@@ -1074,7 +1074,7 @@
     "teamNo": "5", 
     "googleTrendsIndex": 78, 
     "Pressure": 2, 
-    "Attack": 2, 
+    "Attack": 1, 
     "team": "C Palace", 
     "Teamplay": 2, 
     "Accuracy": 3
@@ -1278,7 +1278,7 @@
     "teamNo": "6", 
     "googleTrendsIndex": 71, 
     "Pressure": 2, 
-    "Attack": 2, 
+    "Attack": 1, 
     "team": "Everton", 
     "Teamplay": 2, 
     "Accuracy": 3
@@ -1473,7 +1473,7 @@
     "Attack": 2, 
     "team": "Leicester", 
     "Teamplay": 2, 
-    "Accuracy": 2
+    "Accuracy": 1
   }, 
   {
     "matchDate": "2015-09-26", 
@@ -1676,8 +1676,8 @@
     "Pressure": 1, 
     "Attack": 2, 
     "team": "Liverpool", 
-    "Teamplay": 2, 
-    "Accuracy": 2
+    "Teamplay": 1, 
+    "Accuracy": 1
   }, 
   {
     "matchDate": "2015-08-29", 
@@ -2384,7 +2384,7 @@
     "Pressure": 1, 
     "Attack": 1, 
     "team": "Newcastle", 
-    "Teamplay": 2, 
+    "Teamplay": 1, 
     "Accuracy": 2
   }, 
   {
@@ -3296,8 +3296,8 @@
     "Pressure": 2, 
     "Attack": 2, 
     "team": "Stoke", 
-    "Teamplay": 2, 
-    "Accuracy": 2
+    "Teamplay": 1, 
+    "Accuracy": 1
   }, 
   {
     "matchDate": "2016-01-02", 
@@ -3440,8 +3440,8 @@
     "Pressure": 1, 
     "Attack": 1, 
     "team": "S'land", 
-    "Teamplay": 2, 
-    "Accuracy": 3
+    "Teamplay": 1, 
+    "Accuracy": 2
   }, 
   {
     "matchDate": "2015-11-01", 
@@ -3594,7 +3594,7 @@
     "teamNo": "16", 
     "googleTrendsIndex": 22, 
     "Pressure": 3, 
-    "Attack": 3, 
+    "Attack": 2, 
     "team": "Swansea ", 
     "Teamplay": 2, 
     "Accuracy": 3
@@ -3885,7 +3885,7 @@
     "Attack": 3, 
     "team": "Tottenham", 
     "Teamplay": 2, 
-    "Accuracy": 2
+    "Accuracy": 1
   }, 
   {
     "matchDate": "2015-10-04", 
@@ -4257,7 +4257,7 @@
     "Attack": 2, 
     "team": "Watford", 
     "Teamplay": 2, 
-    "Accuracy": 3
+    "Accuracy": 2
   }, 
   {
     "matchDate": "2015-12-28", 
@@ -4473,7 +4473,7 @@
     "Attack": 2, 
     "team": "W Brom", 
     "Teamplay": 1, 
-    "Accuracy": 2
+    "Accuracy": 1
   }, 
   {
     "matchDate": "2015-12-26", 
@@ -4520,8 +4520,8 @@
     "Pressure": 1, 
     "Attack": 2, 
     "team": "West Ham", 
-    "Teamplay": 2, 
-    "Accuracy": 2
+    "Teamplay": 1, 
+    "Accuracy": 1
   }, 
   {
     "matchDate": "2015-08-15", 
@@ -4602,7 +4602,7 @@
     "teamNo": "20", 
     "googleTrendsIndex": 24, 
     "Pressure": 3, 
-    "Attack": 3, 
+    "Attack": 2, 
     "team": "West Ham", 
     "Teamplay": 2, 
     "Accuracy": 2
@@ -4638,7 +4638,7 @@
     "teamNo": "20", 
     "googleTrendsIndex": 40, 
     "Pressure": 1, 
-    "Attack": 2, 
+    "Attack": 1, 
     "team": "West Ham", 
     "Teamplay": 2, 
     "Accuracy": 2

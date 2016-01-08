@@ -1,0 +1,280 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+	<title>Popularity</title>
+
+	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="../vars_script3.js"></script>
+<!--	<script src="{{ url_for('static', filename='myScript.js') }}"></script> -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<style>
+		.axis path,
+		.axis line {
+		  fill: none;
+		  stroke: #000;
+		  shape-rendering: crispEdges;
+		}
+
+
+
+		#wrapper {
+			background-color:#eee;
+		}
+			#header {
+				background-color:black;
+				height: 30px;
+			}
+			#teamsMenu {
+				min-height: 200px;
+				width: 200px;
+				float: left;
+				background-color:#ccc;
+			}
+
+				#teams_form ul{
+					padding:0;
+				}
+				#teams_form li{
+					padding:0.15em 0 0.5em 1.5em;
+					margin-bottom:0.2em;
+					text-indent:0.4em;
+					font-weight:bold;
+					list-style:none;
+				}
+
+			#teamLogo {
+				background-color:#eee;
+				float: left;
+			}
+				
+			
+			#footer {
+				background-color:#ccc;
+			}
+
+			.clear{
+				clear: both;			
+			}
+
+
+			#scatter-load{
+
+				min-height: 600px;
+				float: left;
+				text-align:center;
+				font-family:"Helvetica Neue";
+				color: #686765;
+				width: 500px;
+				margin: 0;
+			}
+
+			.axis {
+				fill: none;
+				stroke: #AAA;
+				stroke-width: 2.5px;
+				font: 50px;
+				font-weight: bold;
+			}
+
+			text {
+				stroke: none;
+				fill: #666666;
+				font-size: 1em;
+				font-family:"Helvetica Neue"
+			}
+			.label {
+				fill: #414241;
+			}
+			.node {
+				cursor:pointer;
+			}
+			.dot {
+				opacity: .7;
+				cursor: pointer;
+			}
+			
+			
+
+	</style>
+	
+
+</head>
+<body>
+
+	<div id="wrapper">
+
+		<div id="header">
+
+		</div> <!-- end header -->
+
+			<div id="teamsMenu">
+				<form id="teams_form" action="">
+				
+					<br/>
+					<br/>
+					Interest :
+				
+			
+					<select name="interest" style="margin:8px;">
+						<option value="HIGH">High</option>
+						<option value="MED">Medium</option>
+						<option value="LOW">Low</option>
+					</select>
+					<input id="button" type="submit" value="Display" style="margin-top:8px;margin-left:120px;"/>
+				</form>
+			</div>	
+				
+			
+
+		<div id="scatter-load"></div>
+
+		<script>
+		
+		d3.json("http://localhost:5000/interest_features/"+interest, function(error, data){
+
+			if( interest !== null && interest !== ""){
+				showScatterPlot(data);
+			}
+				
+		})
+
+		function showScatterPlot(points) { 
+			var margins = {
+				"left": 80,
+					"right": 80,
+					"top": 50,
+					"bottom": 80
+			};
+			
+			var width = 700;
+			var height = 700;
+			
+			var colors = d3.scale.category20();
+
+			// we add the SVG component to the scatter-load div
+			var svg = d3.select("#scatter-load").append("svg").attr("width", width).attr("height", height).append("g")
+				.attr("transform", "translate(" + margins.left + "," + margins.top + ")");
+
+			// Title Of The Graph
+			svg.append("text")
+			 	.attr("x", 200 )
+			 	.attr("y",  -30 )
+				.style("font-size","25px")
+				.style("font-weight","bold")
+			 	.style("text-anchor", "middle")
+			 	.text(" Measures For "+interest+" Interest : ");
+
+			var x =d3.scale.ordinal().domain(["","Accuracy","Aggressiveness","Attack","Pressure","Teamplay"]).range([0,100,200,300,400,500]);
+
+
+
+
+			var y =d3.scale.ordinal().domain([0,1,2,3]).range([400,300,200,100,0]);
+
+			svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + y.range()[0] + ")");
+			svg.append("g").attr("class", "y axis");
+
+			svg.append("text")
+				.attr("fill", "#414241")
+				.attr("text-anchor", "end")
+				.attr("x", width / 2)
+				.attr("y", height - 35)
+				.text("Feature's Score");
+
+
+			// Y axis label.
+			svg.append("text")
+				.attr("fill", "#414241")
+				.attr("text-anchor", "end")
+				.attr("transform", "rotate(-90)")
+				.attr("x", - height/3)
+				.attr("y", -40)
+				.text("Feature's Score");
+
+			var xAxis = d3.svg.axis().scale(x).orient("bottom").tickPadding(2);
+			var yAxis = d3.svg.axis().scale(y).orient("left").tickPadding(2);
+    
+			svg.selectAll("g.y.axis").call(yAxis);
+			svg.selectAll("g.x.axis").call(xAxis);
+
+			var data = svg.selectAll("g.node").data(points, function (d,i) {
+				return i;
+			});
+
+			
+			var countAc_1 = 0
+			var countAc_2 = 0
+			var countAc_3 = 0
+			var countAg_1 = 0
+			var countAg_2 = 0
+			var countAg_3 = 0
+			var countAt_1 = 0
+			var countAt_2 = 0
+			var countAt_3 = 0
+			var countPr_1 = 0
+			var countPr_2 = 0
+			var countPr_3 = 0
+			var countTp_1 = 0
+			var countTp_2 = 0
+			var countTp_3 = 0
+
+
+			var dataGroup = data.enter().append("g").attr("class", "node")
+			.attr('transform', function (d) {
+				if(d.value1 == "Accuracy" && d.value2 == 1){ countAc_1 = countAc_1 +1; }
+				if(d.value1 == "Accuracy" && d.value2 == 2){ countAc_2 = countAc_2 +1; }
+				if(d.value1 == "Accuracy" && d.value2 == 3){ countAc_3 = countAc_3 +1; }
+				if(d.value1 == "Aggressiveness" && d.value2 == 1){ countAg_1 = countAg_1 +1; }
+				if(d.value1 == "Aggressiveness" && d.value2 == 2){ countAg_2 = countAg_2 +1; }
+				if(d.value1 == "Aggressiveness" && d.value2 == 3){ countAg_3 = countAg_3 +1; }
+				if(d.value1 == "Attack" && d.value2 == 1){ countAt_1 = countAt_1 +1; }
+				if(d.value1 == "Attack" && d.value2 == 2){ countAt_2 = countAt_2 +1; }
+				if(d.value1 == "Attack" && d.value2 == 3){ countAt_3 = countAt_3 +1; }
+				if(d.value1 == "Pressure" && d.value2 == 1){ countPr_1 = countPr_1 +1; }
+				if(d.value1 == "Pressure" && d.value2 == 2){ countPr_2 = countPr_2 +1; }
+				if(d.value1 == "Pressure" && d.value2 == 3){ countPr_3 = countPr_3 +1; }
+				if(d.value1 == "Teamplay" && d.value2 == 1){ countTp_1 = countTp_1 +1; }
+				if(d.value1 == "Teamplay" && d.value2 == 2){ countTp_2 = countTp_2 +1; }
+				if(d.value1 == "Teamplay" && d.value2 == 3){ countTp_3 = countTp_3 +1; }
+
+				return "translate(" + x(d.value1) + "," + y(d.value2) + ")";
+			});
+ 
+			dataGroup.append("circle")
+				.attr("r", function (d) { 
+
+					if(d.value1 == "Accuracy" && d.value2 == 1){ return countAc_1/2; }
+					if(d.value1 == "Accuracy" && d.value2 == 2){ return countAc_2/2; }
+					if(d.value1 == "Accuracy" && d.value2 == 3){ return countAc_3/2; }
+					if(d.value1 == "Aggressiveness" && d.value2 == 1){ return countAg_1/2; }
+					if(d.value1 == "Aggressiveness" && d.value2 == 2){ return countAg_2/2; }
+					if(d.value1 == "Aggressiveness" && d.value2 == 3){ return countAg_3/2; }
+					if(d.value1 == "Attack" && d.value2 == 1){ return countAt_1/2; }
+					if(d.value1 == "Attack" && d.value2 == 2){ return countAt_2/2; }
+					if(d.value1 == "Attack" && d.value2 == 3){ return countAt_3/2; }
+					if(d.value1 == "Pressure" && d.value2 == 1){ return countPr_1/2; }
+					if(d.value1 == "Pressure" && d.value2 == 2){ return countPr_2/2; }
+					if(d.value1 == "Pressure" && d.value2 == 3){ return countPr_3/2; }
+					if(d.value1 == "Teamplay" && d.value2 == 1){ return countTp_1/2; }
+					if(d.value1 == "Teamplay" && d.value2 == 2){ return countTp_2/2; }
+					if(d.value1 == "Teamplay" && d.value2 == 3){ return countTp_3/2; }
+
+				})
+				.attr("class", "dot");
+
+		}
+		
+		</script>
+		
+
+		<div class="clear"></div>
+		<div id="footer">
+
+		</div> <!-- end footer -->
+
+	</div> <!-- end wrapper -->
+
+</body>
+</html>

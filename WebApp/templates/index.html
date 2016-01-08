@@ -7,7 +7,6 @@
 
 	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script src="vars_script.js"></script>
-<!--	<script src="{{ url_for('static', filename='myScript.js') }}"></script> -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<style>
 		.axis {
@@ -27,8 +26,8 @@
 			background-color:#eee;
 		}
 			#header {
-				background-color:#ccc;
-				height: 100px;
+				background-color:black;
+				height: 40px;
 			}
 			#teamsMenu {
 				min-height: 400px;
@@ -48,6 +47,12 @@
 					list-style:none;
 				}
 
+			#teamLogo {
+				float: left;
+				background-color:#eee;
+				padding-top:50px;
+				padding-left:50px;
+			}
 
 			#mainGraph {
 				text-align:center;
@@ -60,18 +65,15 @@
 				min-height: 600px;
 				width: 300px;
 				float: right;
-				background-color:#ccc;
 			}
-				#teamLogo {
-					background-color:#eee;
-				}
 				#statsGraph {
-					background-color:#ccc;
+					background-color:#eee;
+					padding-top:50px;
 				}
 
 			
 			#footer {
-				background-color:#ccc;
+				background-color:black;
 			}
 
 			.clear{
@@ -277,7 +279,16 @@
 				</ul>
 			</form>
 		</div> <!-- end teamsMenu -->
-
+		<div id="teamLogo">
+				<br/>
+				<img id="team_logo" src=""></img> <!-- end team_logo -->
+				<script>
+				if( team !== null && team !== ""){
+					var logo_path = "images/"+team+".png";
+					document.getElementById('team_logo').src = logo_path;
+				}
+				</script>
+		</div> <!-- end teamImage -->
 		<div id="mainGraph">
 			<br/>
 			<div id="results">
@@ -301,15 +312,66 @@
 			<div id="results6">
 			</div><!-- end results6 -->
 
+			<div id="legend">
+			</div><!-- end legend -->
+
 
 			<script>
 
 				var height = 300;
-
-				var svg = d3.select("#results").append("svg").attr("width",750).attr("height",height+30);
+				var width = 750;
+				var graphLeftMargin = 150;
+				var paddingGraphTop = 30;
+				var paddingGraphDown = 30;
+				var svg = d3.select("#results").append("svg").attr("width",width).attr("height",height+paddingGraphTop+paddingGraphDown);
 
 				console.log(" GETTING popularity data for : "+team);
+				
+				if( team !== null && team !== ""){
 
+				svg.append("text")      // text label for the x axis
+					.attr("x", width/3 )
+					.attr("y",  15 )
+					.style("text-anchor", "middle")
+					.text("Positive And Negative Tweets About Matches");
+
+
+				// The Y Axis Label : 
+				svg.append("text")
+					.attr("transform", "rotate(-90)")
+					.attr("y", graphLeftMargin/2)
+					.attr("x",-height/2)
+					.attr("dy", "1em")
+					.style("text-anchor", "middle")
+					.text("Tweets Count");
+
+				var posRec = svg.append("rect");
+				posRec.attr("x", width/2 )
+					.attr("y", 40)
+					.attr("height", 20)
+					.attr("width", 40)
+					.style("fill", "teal");		
+
+				var negRec = svg.append("rect");
+				negRec.attr("x", width/2 )
+					.attr("y", 70)
+					.attr("height", 20)
+					.attr("width", 40)
+					.style("fill", "red");
+
+				svg.append("text")
+						.text("Positive")
+						.attr("x", width/2 + 70)
+						.attr("y", 55)
+						.style("text-anchor", "middle");
+
+				svg.append("text")
+						.text("Negative")
+						.attr("x", width/2 + 70)
+						.attr("y", 85)
+						.style("text-anchor", "middle");
+
+				}
 
 				if( team !== null && team !== ""){
 					d3.json("http://localhost:5000/popularity/"+team, function(error, days){
@@ -319,12 +381,12 @@
 						barsPos.enter().append("rect").classed("barPos", true);
 
 						barsPos
-						.attr("x", function (d,i) { return 60 + 10 + i * 80;})
+						.attr("x", function (d,i) { return graphLeftMargin + 10 + i * 80;})
 						.attr("width",30)
 						.attr("y", function(d) {
-							return height - (d.pos_count/50).toPrecision(4);
+							return height + paddingGraphTop - (d.pos_count/5).toPrecision(4);
 						})
-						.attr("height", function (d) { return (d.pos_count/50).toPrecision(4);})
+						.attr("height", function (d) { return (d.pos_count/5).toPrecision(4);})
 						.attr("fill", "teal");
 
 
@@ -333,12 +395,12 @@
 						barsNeg.enter().append("rect").classed("barNeg", true);
 
 						barsNeg
-						.attr("x", function (d,i) { return 60 + 10 + i * 80 + 30;})
+						.attr("x", function (d,i) { return graphLeftMargin + 10 + i * 80 + 30;})
 						.attr("width",30)
 						.attr("y", function(d) {
-							return height - (d.neg_count/50).toPrecision(4);
+							return height + paddingGraphTop - (d.neg_count/5).toPrecision(4);
 						})
-						.attr("height", function (d) { return (d.neg_count/50).toPrecision(4);})
+						.attr("height", function (d) { return (d.neg_count/5).toPrecision(4);})
 						.attr("fill", "red");
 
 
@@ -350,9 +412,9 @@
 						.text(function(d) {
 							return d.pos_count;
 						})
-						.attr("x", function (d,i) { return 60 + 10 + i * 80 + 15;})
+						.attr("x", function (d,i) { return graphLeftMargin + 10 + i * 80 + 15;})
 						.attr("y", function(d) {
-							return height - (d.pos_count/50).toPrecision(4) - 1;
+							return height + paddingGraphTop - (d.pos_count/5).toPrecision(4) - 1;
 						})
 						.style("text-anchor", "middle");
 
@@ -365,9 +427,9 @@
 						.text(function(d) {
 							return d.neg_count;
 						})
-						.attr("x", function (d,i) { return 60 + 10 + i * 80 + 45;})
+						.attr("x", function (d,i) { return graphLeftMargin + 10 + i * 80 + 45;})
 						.attr("y", function(d) {
-							return height - (d.neg_count/50).toPrecision(4) - 1;
+							return height + paddingGraphTop - (d.neg_count/5).toPrecision(4) - 1;
 						})
 						.style("text-anchor", "middle");
 
@@ -382,13 +444,12 @@
 						.text(function(d) {
 							return d.date;
 						})
-						.attr("x", function (d,i) { return 60 + 10 + i * 80 + 30;})
+						.attr("x", function (d,i) { return graphLeftMargin + 10 + i * 80 + 30;})
 						.attr("y", function(d) {
-							return 315;
+							return 315 + paddingGraphTop;
 						})
 						.style("text-anchor", "middle")
 						.on("click", function(d) { dateClick(d.date) });
-
 
 					});
 				}
@@ -401,12 +462,12 @@
 					document.forms["teams_form"].submit();
 				}
 
+				if( team !== null && team !== ""){
 
-		
 					// Vertical Scale
 					var vScale = d3.scale.linear()
-						.domain([0, height*50])
-						.range([height, 0]);
+						.domain([0, height*5])
+						.range([height+paddingGraphTop, 0+paddingGraphTop]);
 
 					// V Axis
 					var vAxis = d3.svg.axis()
@@ -419,12 +480,13 @@
 
 					vAxis(vGuide);
 
-					vGuide.attr('transform','translate(60,0)');
+					vGuide.attr('transform','translate('+graphLeftMargin+',0)');
 					vGuide.selectAll('path')
 						.style('fill','none')
 						.style('stroke','#000')
 					vGuide.selectAll('line')
 						.style('stroke','#000')
+				}
 
 				if( team !== null && team !== ""){
 					d3.json("http://localhost:5000/stats/Attack/"+team, function(error, attacks){
@@ -434,11 +496,10 @@
 
 						var rectangles = svg2.selectAll("rect").data(attacks).enter().append("rect");
 
-						//var ramp = d3.scale.linear().domain([0,3]).range(["white","red","blue","black"]);
-						var ramp=d3.scale.ordinal().domain(["0","1","2","3"]).range(["green","red","blue","black"]);
+						var ramp=d3.scale.ordinal().domain(["0","1","2","3"]).range(["#FFFFFF","#1AFF1A","#008000","#003300"]);
 
 						var rectangleAttributes = rectangles
-								.attr("x", function (d,i) { return 60 + 10 + i * 80; })
+								.attr("x", function (d,i) { return graphLeftMargin + 10 + i * 80; })
 								.attr("y", 0)
 								.attr("height", 20)
 								.attr("width", 60)
@@ -446,21 +507,8 @@
 						
 						svg2.append("text")
 						.text("Attack : ")
-						.attr("x", 25)
+						.attr("x",  graphLeftMargin - 90)
 						.attr("y", 15)
-						.style("text-anchor", "middle");
-						
-//						svg2.selectAll("date.feature_date")
-//						.data(attacks)
-//						.enter()
-//						.append("text")
-//						.classed("feature_date", true)
-//						.text(function(d) {
-//							return d.date;
-//						})
-//						.attr("x", function (d,i) { return 60 + 10 + i * 80 + 30;})
-//						.attr("y", 22)
-//						.style("text-anchor", "middle");
 
 				});}
 
@@ -472,21 +520,19 @@
 
 						var rectangles = svg3.selectAll("rect").data(agres).enter().append("rect");
 
-						//var ramp = d3.scale.linear().domain([0,3]).range(["white","red","blue","black"]);
-						var ramp=d3.scale.ordinal().domain(["0","1","2","3"]).range(["green","red","blue","black"]);
+						var ramp=d3.scale.ordinal().domain(["0","1","2","3"]).range(["#FFFFFF","#1AFF1A","#008000","#003300"]);
 
 						var rectangleAttributes = rectangles
-								.attr("x", function (d,i) { return 60 + 10 + i * 80; })
+								.attr("x", function (d,i) { return graphLeftMargin + 10 + i * 80; })
 								.attr("y", 0)
 								.attr("height", 20)
 								.attr("width", 60)
 								.style("fill", function(d) { return ramp(d.value); });
 						
 						svg3.append("text")
-						.text("Agressiveness : ")
-						.attr("x", 25)
-						.attr("y", 15)
-						.style("text-anchor", "middle");
+						.text("Aggressiveness : ")
+						.attr("x",  graphLeftMargin - 90)
+						.attr("y", 15);
 
 				});}
 
@@ -498,11 +544,10 @@
 
 						var rectangles = svg4.selectAll("rect").data(pressures).enter().append("rect");
 
-						//var ramp = d3.scale.linear().domain([0,3]).range(["white","red","blue","black"]);
-						var ramp=d3.scale.ordinal().domain(["0","1","2","3"]).range(["green","red","blue","black"]);
+						var ramp=d3.scale.ordinal().domain(["0","1","2","3"]).range(["#FFFFFF","#1AFF1A","#008000","#003300"]);
 
 						var rectangleAttributes = rectangles
-								.attr("x", function (d,i) { return 60 + 10 + i * 80; })
+								.attr("x", function (d,i) { return graphLeftMargin + 10 + i * 80; })
 								.attr("y", 0)
 								.attr("height", 20)
 								.attr("width", 60)
@@ -510,9 +555,8 @@
 						
 						svg4.append("text")
 						.text("Pressure : ")
-						.attr("x", 25)
-						.attr("y", 15)
-						.style("text-anchor", "middle");
+						.attr("x",  graphLeftMargin - 90)
+						.attr("y", 15);
 
 				});}
 
@@ -524,11 +568,10 @@
 
 						var rectangles = svg5.selectAll("rect").data(teamPlay).enter().append("rect");
 
-						//var ramp = d3.scale.linear().domain([0,3]).range(["white","red","blue","black"]);
-						var ramp=d3.scale.ordinal().domain(["0","1","2","3"]).range(["green","red","blue","black"]);
+						var ramp=d3.scale.ordinal().domain(["0","1","2","3"]).range(["#FFFFFF","#1AFF1A","#008000","#003300"]);
 
 						var rectangleAttributes = rectangles
-								.attr("x", function (d,i) { return 60 + 10 + i * 80; })
+								.attr("x", function (d,i) { return graphLeftMargin + 10 + i * 80; })
 								.attr("y", 0)
 								.attr("height", 20)
 								.attr("width", 60)
@@ -536,9 +579,8 @@
 						
 						svg5.append("text")
 						.text("Teamplay : ")
-						.attr("x", 25)
-						.attr("y", 15)
-						.style("text-anchor", "middle");
+						.attr("x",  graphLeftMargin - 90)
+						.attr("y", 15);
 
 				});}
 
@@ -550,11 +592,10 @@
 
 						var rectangles = svg6.selectAll("rect").data(accuracies).enter().append("rect");
 
-						//var ramp = d3.scale.linear().domain([0,3]).range(["white","red","blue","black"]);
-						var ramp=d3.scale.ordinal().domain(["0","1","2","3"]).range(["green","red","blue","black"]);
+						var ramp=d3.scale.ordinal().domain(["0","1","2","3"]).range(["#FFFFFF","#1AFF1A","#008000","#003300"]);
 
 						var rectangleAttributes = rectangles
-								.attr("x", function (d,i) { return 60 + 10 + i * 80; })
+								.attr("x", function (d,i) { return graphLeftMargin + 10 + i * 80; })
 								.attr("y", 0)
 								.attr("height", 20)
 								.attr("width", 60)
@@ -562,16 +603,55 @@
 						
 						svg6.append("text")
 						.text("Accuracy : ")
-						.attr("x", 25)
-						.attr("y", 15)
-						.style("text-anchor", "middle");
+						.attr("x", graphLeftMargin - 85)
+						.attr("y", 15);
 
 				});}
 
+				if( team !== null && team !== ""){
 				
+					var svg7 = d3.select("#legend").append("svg").attr("width",750).attr("height",100);			
+
+					var rectangle1 = svg7.append("rect");
+					rectangle1.attr("x",  250+80)
+						.attr("y", 0)
+						.attr("height", 20)
+						.attr("width", 80)
+						.style("fill", "#1AFF1A");		
+
+					var rectangle2 = svg7.append("rect");
+					rectangle2.attr("x",  250+2*80 )
+						.attr("y", 0)
+						.attr("height", 20)
+						.attr("width", 80)
+						.style("fill", "#008000");			
+
+					var rectangle3 = svg7.append("rect");
+					rectangle3.attr("x",  250+3*80 )
+						.attr("y", 0)
+						.attr("height", 20)
+						.attr("width", 80)
+						.style("fill", "#003300");		
 
 
-				
+					svg7.append("text")
+						.text("LOW")
+						.attr("x", 250+80+40)
+						.attr("y", 15)
+						.style("text-anchor", "middle");
+					svg7.append("text")
+						.text("MEDIUM")
+						.attr("x", 250+2*80+40)
+						.attr("y", 15)
+						.style("text-anchor", "middle");
+					svg7.append("text")
+						.text("HIGH")
+						.attr("x", 250+3*80+40)
+						.attr("y", 15)
+						.style("text-anchor", "middle");					
+	
+				}
+		
 
 			</script>
 
@@ -579,16 +659,7 @@
 		</div> <!-- end mainGraph -->
 
 		<div id="statsWrapper">
-			<div id="teamLogo">
-				<br/>
-				<img id="team_logo" src=""></img> <!-- end team_logo -->
-				<script>
-				if( team !== null && team !== ""){
-					var logo_path = "images/"+team+".png";
-					document.getElementById('team_logo').src = logo_path;
-				}
-				</script>
-			</div> <!-- end teamLogo -->
+
 			<div id="statsGraph">
 				<div id="pieChart">
 				</div>  <!-- end pieChart -->
@@ -620,7 +691,7 @@
 					var radius = Math.min(width, height) / 2;
 
 
-					var color = d3.scale.ordinal().range(['#A60F2B', '#648C85']);
+					var color = d3.scale.ordinal().range(['#648C85', '#A60F2B']);
 
 					var svg3 = d3.select('#pieChart')
 							.append('svg')
@@ -679,7 +750,6 @@
 		</div> <!-- end statsWrapper -->
 		<div class="clear"></div>
 		<div id="footer">
-		footer
 		</div> <!-- end footer -->
 
 	</div> <!-- end wrapper -->
