@@ -5,7 +5,6 @@ import nltk
 import re
 import random
 
-from nltk.corpus import movie_reviews
 from datetime import datetime
 
 
@@ -77,9 +76,7 @@ def login():
 
 def analyzeMatchTweets(match):
 	matchDay = datetime.strptime(match["startDate"], '%Y-%m-%d')
-	matchStartTime = match["startTime"]
-	#matchEndTime = matchStartTime + 2:00
-	#endCollectTime = matchEndTime + 
+	matchStartTime = match["startTime"] 
 	startCollectTime = datetime.strptime(match["startDate"]+" "+matchStartTime, '%Y-%m-%d %H:%M')
 	endCollectTime = datetime.strptime(match["endCollectTime"], '%Y-%m-%d %H:%M')
 	endCollectDay = match["endCollectTime"].split()[0]
@@ -105,9 +102,9 @@ def analyzeMatchTweets(match):
 		while 1 == 1 :
 			try:
 				if (max_id <= 0):
-					new_tweets = api.search(q=searchQuery, count=50,until='2015-12-28')
+					new_tweets = api.search(q=searchQuery, count=50)
 				else:
-					new_tweets = api.search(q=searchQuery, count=50, max_id=str(max_id - 1),until='2015-12-28')
+					new_tweets = api.search(q=searchQuery, count=50, max_id=str(max_id - 1))
 				if not new_tweets:
 					print("No more tweets found")
 					break
@@ -118,14 +115,13 @@ def analyzeMatchTweets(match):
 
 			
 			for tweet in new_tweets :
-				print("New Tweet   ",tweet.created_at)
+				print("New Tweet   "+tweet.created_at.strftime("%Y-%m-%d %H:%M:%S"))
 				if tweet.created_at < startCollectTime :
 					matchStartTimeReached = True
 					break
 				if tweet.created_at < endCollectTime :
 					count += 1
-					print(" *** New Tweet"+tweet.created_at.strftime("%Y-%m-%d %H:%M:%S"))
-
+					print(" *** Saving ......... ")
 
 					# Start Analyzing
 
@@ -134,7 +130,6 @@ def analyzeMatchTweets(match):
 					# prepare tweet for classification
 					tweetWords = re.sub("[^\w]", " ",  tweetToAnalyze).split()
 					lowerTweetWords = []
-					#print(tweetWords)
 					[lowerTweetWords.append(word.lower()) for word in tweetWords]
 		
 					#classify tweet 
@@ -145,7 +140,6 @@ def analyzeMatchTweets(match):
 						print(" Classified as relevant to Both Teams. Ignoring !!!!!!!")
 					elif isTeam1 or isTeam2:
 						# sentimentAnalysis
-						#sentiment = sentimentClassifier.classify(findFeaturesSentiment(lowerTweetWords))
 						dist = sentimentClassifier.prob_classify(findFeaturesSentiment(lowerTweetWords))
 						sentiment = dist.max()
 						prob = dist.prob(sentiment)
@@ -167,6 +161,7 @@ def analyzeMatchTweets(match):
 							_sentiment1['sentiment'] = sentiment
 							json_sentiment1 = json.dumps(_sentiment1)
 							f.write(json_sentiment1+'\n')
+
 						if isTeam2 and (prob > 0.65):
 							_sentiment2 = {}
 							_sentiment2['tweet_id'] = tweet.id
@@ -189,8 +184,6 @@ def analyzeMatchTweets(match):
 			if new_tweets:
 				max_id = new_tweets[-1].id
 
-			#if count > 10 :
-			#	break
 			if matchStartTimeReached :
 				break
 
@@ -304,9 +297,6 @@ def prepareSentimentClassifier():
 
 try:
 
-	global today
-	today = datetime.now().strftime("%Y-%m-%d")
-
 ############################## Prepare Classifiers ##############################
 
 	arsenalClassifier = prepareClassifier('trainingSetArsenal.json',"ARSENAL")
@@ -333,9 +323,6 @@ try:
 	sentimentClassifier = prepareSentimentClassifier()
 
 ###################################################################################	
-	
-	#global api
-	#api = login()
 
 
 	ACCESS_TOKEN = '1681062247-YXE4HfZCwLWBhE7SvNL2TmNC2vwHsBFH6Zvtjyb'

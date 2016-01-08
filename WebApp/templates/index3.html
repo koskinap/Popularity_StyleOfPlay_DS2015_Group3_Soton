@@ -134,7 +134,9 @@
 		
 		d3.json("http://localhost:5000/interest_features/"+interest, function(error, data){
 
-			showScatterPlot(data);
+			if( interest !== null && interest !== ""){
+				showScatterPlot(data);
+			}
 				
 		})
 
@@ -262,12 +264,6 @@
 				})
 				.attr("class", "dot");
 
-			//dataGroup.append("text")
-			//	.style("text-anchor", "middle")
-			//	.attr("dy", -10)
-			//	.text(function (d) {
-			//		return d.teamName;
-			//});
 		}
 		
 		</script>
