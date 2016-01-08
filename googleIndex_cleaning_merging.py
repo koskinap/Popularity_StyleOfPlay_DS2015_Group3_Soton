@@ -10,6 +10,7 @@ path =r'Premier_Data'
 allFiles = glob.glob(path + "/*.csv")
 
 teamNo = 0
+# Select only lines of data relevant to interest per week.
 hRange = range(0,56)
 
 for currFile in allFiles:
@@ -24,13 +25,14 @@ for currFile in allFiles:
 	for cdoc in reader:
 		if head in hRange:
 			if teamNo == 1 and head ==4:
-				ndoc = ['Week','Start Date','End Date','TeamIndex','Google Trends Index','Search Term']
+				ndoc = ['Week','Start Date','End Date','teamNo','Google Trends Index','Search Term']
 				output = ','.join(ndoc) + '\n'
 				exportFile.write(output)
 
 			if head == 4:
 				search_term = cdoc[1]
 			elif head > 4:
+				#Seperate starting and ending date of week
 				days = cdoc[0].split(" - ")
 				ndoc = [str(head - 4),days[0],days[1],str(teamNo),cdoc[1],search_term]
 				output = ','.join(ndoc) + '\n'

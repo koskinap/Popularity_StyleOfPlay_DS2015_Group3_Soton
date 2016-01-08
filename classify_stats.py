@@ -7,10 +7,22 @@ import datetime
 
 inputFile = open('cleaned_premier_data/merged_data.csv', 'rU')
 csvOutputFile  = open('cleaned_premier_data/classified_data.csv', 'wb+')
+
+meansstdsFile = open('cleaned_premier_data/stats_distr.csv', 'r')
+#featFile = open('cleaned_premier_data/feat_distr.csv', 'r')
+
 # Means and stds about stats coming from analysis in Matlab
 
-means = [438.87, 4.34, 5.03, 5.28, 10.87, 78.02, 1.33, 10.52, 50, 1.99, 1.73]
-stds = [104.53, 2.49, 2.56, 2.86, 3.72, 6.54, 1.21, 3.61, 10.47, 1.52, 1.20]
+#means = [438.87, 4.34, 5.03, 5.28, 10.87, 78.02, 1.33, 10.52, 50, 1.99, 1.73]
+#stds = [104.53, 2.49, 2.56, 2.86, 3.72, 6.54, 1.21, 3.61, 10.47, 1.52, 1.20]
+msReader = csv.reader(meansstdsFile)
+c = False
+for row in msReader:
+	if c == False:
+		means = row
+		c = True
+	else:
+		stds = row
 
 featMeans = [11.88,	5.99, 4.04, 2.09, 5.99]
 featStds = [1.55, 1.51, 0.99, 1.01, 1.24]
@@ -20,24 +32,27 @@ temp_headers = ['passes', 'shotsOnTarget', 'shotsOffTarget', 'corners', 'foulsCo
 
 featureKeys = ['matchDate', 'matchId', 'team', 'teamNo', 'Attack' , 'Teamplay' , 'Aggressiveness' , 'Accuracy' , 'Pressure' , 'googleTrendsIndex']
 
+# Define feature functions
+# Function of shotsOnTarget, shotsOffTarget, corners, goals, foulsWon, offSide
 attack = [1, 2, 3, 6, 7, 9]
 attackFactors = [1, 1, 1, 1, 1, 1]
 
+# Function of passes, accuratePasses, possession
 teamPlay = [0, 5, 8]
 teamPlayFactors = [1, 1, 1]
 
+# Function of foulsConceded, yellowCards
 aggressiveness = [4, 10]
 aggressivenessFactors = [1, 1]
 
+# Function of shotsOnTarget, accuratePasses, offSide
 accuracy = [1 ,5 ,9]
 accuracyFactors = [1, 1, -1]
 
+# Function of shotsOffTarget, corners, possession
 pressure = [2, 3, 8]
 pressureFactors = [1, 1, 1]
 
-# defence = goalsConceded,foulsConceded,yellowcards
-
-#efficiency ?????do we really need this? we have accuracy
 
 output = []
 output2 = []
@@ -60,9 +75,9 @@ with inputFile as infile, csvOutputFile as outFile:
 		rates = []
  		for index,el in enumerate(content):
 
- 			if (float(el) > means[index] + stds[index]):
+ 			if (float(el) > float(means[index]) + float(stds[index])):
  				rates.append(3)
- 			elif( float(el) < means[index] - stds[index]):
+ 			elif( float(el) < float(means[index]) - float(stds[index])):
  				rates.append(1)
  			else:
  				rates.append(2)
