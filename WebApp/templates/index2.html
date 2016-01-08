@@ -7,7 +7,6 @@
 
 	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script src="../vars_script2.js"></script>
-<!--	<script src="{{ url_for('static', filename='myScript.js') }}"></script> -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<style>
 
@@ -202,30 +201,29 @@
 
 
 			// Title Of The Graph
-			svg.append("text")
-			 	.attr("x", 200 )
-			 	.attr("y",  -30 )
-				.style("font-size","25px")
-				.style("font-weight","bold")
-			 	.style("text-anchor", "middle")
-			 	.text(feature+" Measures For "+team);
+			
+			if( team !== null && team !== ""){
+				svg.append("text")
+				 	.attr("x", 200 )
+				 	.attr("y",  -30 )
+					.style("font-size","25px")
+					.style("font-weight","bold")
+				 	.style("text-anchor", "middle")
+				 	.text(feature+" Measures For "+team);
+			}
 
 			var xStep = (width - margins.left - margins.right);
 
 			var x =d3.scale.ordinal().domain(["0","1","2","3"]).range([0,xStep/3,2*xStep/3,xStep]);
 
-			// this does the same as for the y axis but maps from the value2 variable to the height to 0. 
+			
 			var y = d3.scale.linear()
 				.domain(d3.extent(points, function (d) {
 				return d.value2;
 			}))
-			// Note that height goes first due to the weird SVG coordinate system
 			.range([height - margins.top - margins.bottom, 0]);
 
 
-
-
-			// we add the axes SVG component. At this point, this is just a placeholder. The actual axis will be added in a bit
 			svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + y.range()[0] + ")");
 			svg.append("g").attr("class", "y axis");
 
@@ -263,17 +261,14 @@
 				return "translate(" + x(d.value1) + "," + y(d.value2) + ")";
 			});
 
-			// we add our first graphics element! A circle! 
 			dataGroup.append("circle")
 				.attr("r", 5)
 				.attr("class", "dot");
 
-			// now we add some text, so we can see what each item is.
 			dataGroup.append("text")
 				.style("text-anchor", "middle")
 				.attr("dy", -10)
 				.text(function (d) {
-					// this shouldn't be a surprising statement.
 					return d.value2;
 			});
 		}

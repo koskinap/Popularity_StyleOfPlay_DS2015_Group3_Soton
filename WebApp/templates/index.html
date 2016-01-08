@@ -7,7 +7,6 @@
 
 	<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script src="vars_script.js"></script>
-<!--	<script src="{{ url_for('static', filename='myScript.js') }}"></script> -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<style>
 		.axis {
@@ -328,6 +327,8 @@
 
 				console.log(" GETTING popularity data for : "+team);
 				
+				if( team !== null && team !== ""){
+
 				svg.append("text")      // text label for the x axis
 					.attr("x", width/3 )
 					.attr("y",  15 )
@@ -369,6 +370,8 @@
 						.attr("x", width/2 + 70)
 						.attr("y", 85)
 						.style("text-anchor", "middle");
+
+				}
 
 				if( team !== null && team !== ""){
 					d3.json("http://localhost:5000/popularity/"+team, function(error, days){
@@ -459,12 +462,7 @@
 					document.forms["teams_form"].submit();
 				}
 
-
-		
-					// Vertical Scale
-					//var vScale = d3.scale.linear()
-					//	.domain([0, height*5])
-					//	.range([height, 0]);
+				if( team !== null && team !== ""){
 
 					// Vertical Scale
 					var vScale = d3.scale.linear()
@@ -488,6 +486,7 @@
 						.style('stroke','#000')
 					vGuide.selectAll('line')
 						.style('stroke','#000')
+				}
 
 				if( team !== null && team !== ""){
 					d3.json("http://localhost:5000/stats/Attack/"+team, function(error, attacks){
@@ -497,7 +496,6 @@
 
 						var rectangles = svg2.selectAll("rect").data(attacks).enter().append("rect");
 
-						//var ramp = d3.scale.linear().domain([0,3]).range(["white","red","blue","black"]);
 						var ramp=d3.scale.ordinal().domain(["0","1","2","3"]).range(["#FFFFFF","#1AFF1A","#008000","#003300"]);
 
 						var rectangleAttributes = rectangles
@@ -511,19 +509,6 @@
 						.text("Attack : ")
 						.attr("x",  graphLeftMargin - 90)
 						.attr("y", 15)
-						//.style("text-anchor", "middle");
-						
-//						svg2.selectAll("date.feature_date")
-//						.data(attacks)
-//						.enter()
-//						.append("text")
-//						.classed("feature_date", true)
-//						.text(function(d) {
-//							return d.date;
-//						})
-//						.attr("x", function (d,i) { return 60 + 10 + i * 80 + 30;})
-//						.attr("y", 22)
-//						.style("text-anchor", "middle");
 
 				});}
 
@@ -535,7 +520,6 @@
 
 						var rectangles = svg3.selectAll("rect").data(agres).enter().append("rect");
 
-						//var ramp = d3.scale.linear().domain([0,3]).range(["white","red","blue","black"]);
 						var ramp=d3.scale.ordinal().domain(["0","1","2","3"]).range(["#FFFFFF","#1AFF1A","#008000","#003300"]);
 
 						var rectangleAttributes = rectangles
@@ -548,8 +532,7 @@
 						svg3.append("text")
 						.text("Aggressiveness : ")
 						.attr("x",  graphLeftMargin - 90)
-						.attr("y", 15)
-						//.style("text-anchor", "middle");
+						.attr("y", 15);
 
 				});}
 
@@ -561,7 +544,6 @@
 
 						var rectangles = svg4.selectAll("rect").data(pressures).enter().append("rect");
 
-						//var ramp = d3.scale.linear().domain([0,3]).range(["white","red","blue","black"]);
 						var ramp=d3.scale.ordinal().domain(["0","1","2","3"]).range(["#FFFFFF","#1AFF1A","#008000","#003300"]);
 
 						var rectangleAttributes = rectangles
@@ -574,8 +556,7 @@
 						svg4.append("text")
 						.text("Pressure : ")
 						.attr("x",  graphLeftMargin - 90)
-						.attr("y", 15)
-						//.style("text-anchor", "middle");
+						.attr("y", 15);
 
 				});}
 
@@ -587,7 +568,6 @@
 
 						var rectangles = svg5.selectAll("rect").data(teamPlay).enter().append("rect");
 
-						//var ramp = d3.scale.linear().domain([0,3]).range(["white","red","blue","black"]);
 						var ramp=d3.scale.ordinal().domain(["0","1","2","3"]).range(["#FFFFFF","#1AFF1A","#008000","#003300"]);
 
 						var rectangleAttributes = rectangles
@@ -600,8 +580,7 @@
 						svg5.append("text")
 						.text("Teamplay : ")
 						.attr("x",  graphLeftMargin - 90)
-						.attr("y", 15)
-						//.style("text-anchor", "middle");
+						.attr("y", 15);
 
 				});}
 
@@ -613,7 +592,6 @@
 
 						var rectangles = svg6.selectAll("rect").data(accuracies).enter().append("rect");
 
-						//var ramp = d3.scale.linear().domain([0,3]).range(["white","red","blue","black"]);
 						var ramp=d3.scale.ordinal().domain(["0","1","2","3"]).range(["#FFFFFF","#1AFF1A","#008000","#003300"]);
 
 						var rectangleAttributes = rectangles
@@ -626,18 +604,13 @@
 						svg6.append("text")
 						.text("Accuracy : ")
 						.attr("x", graphLeftMargin - 85)
-						.attr("y", 15)
-						//.style("text-anchor", "middle");
+						.attr("y", 15);
 
 				});}
 
 				if( team !== null && team !== ""){
 				
 					var svg7 = d3.select("#legend").append("svg").attr("width",750).attr("height",100);			
-
-
-
-
 
 					var rectangle1 = svg7.append("rect");
 					rectangle1.attr("x",  250+80)
